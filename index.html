@@ -61,7 +61,7 @@
         .section { max-width: 1120px; margin: 0 auto; padding: 80px 48px 72px; width: 100%; }
         .section-title { font-family: var(--serif); font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 10px; }
         .section-sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 48px; }
-        .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
         .card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 36px 30px; text-decoration: none; color: var(--ink); transition: all .35s var(--spring); position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03), 0 16px 40px rgba(47,48,55,0.04); }
         .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #C41E3A, #F3A9B8); transform: scaleX(0); transform-origin: left; transition: transform .4s var(--spring); }
         .card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 12px 24px rgba(34,42,53,0.07), 0 32px 64px rgba(47,48,55,0.10); border-color: #E8E8E8; }
@@ -146,7 +146,7 @@
     <div class="band band-grid">
     <div class="section">
         <div class="reveal">
-            <div class="section-title">三大核心功能</div>
+            <div class="section-title">四大核心功能</div>
             <div class="section-sub">从内容检索到定制报告，一站满足行业情报需求</div>
         </div>
         <div class="cards reveal">
@@ -155,6 +155,12 @@
                 <h3>文章检索</h3>
                 <p>按公众号、时间范围检索全部已收录文章，支持批量导出。每日更新，覆盖行业主流媒体。</p>
                 <div class="go">立即检索 →</div>
+            </a>
+            <a class="card" href="submit.html">
+                <div class="icon"><svg viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></div>
+                <h3>提交需求</h3>
+                <p>提交您希望收录的公众号或网站需求，我们会评估后纳入收录范围。</p>
+                <div class="go">提交需求 →</div>
             </a>
             <a class="card" href="report.html">
                 <div class="icon"><svg viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg></div>
