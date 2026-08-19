@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+    <title>智能选文报告 - 化妆品行业洞察</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; background: #F8F8F8; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .topbar .logo { font-size: 17px; font-weight: 600; color: #2D2D2D; }
+        .topbar .logo span { color: #C41E3A; }
+        .topbar a.back { font-size: 14px; color: #C41E3A; text-decoration: none; }
+        .steps-bar { background: #fff; border-bottom: 1px solid #efefef; padding: 10px 24px; display: flex; gap: 18px; align-items: center; flex-shrink: 0; font-size: 13px; color: #999; }
+        .steps-bar .s { display: flex; align-items: center; gap: 7px; }
+        .steps-bar .n { width: 22px; height: 22px; border-radius: 50%; background: #eee; color: #999; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+        .steps-bar .s.on { color: #C41E3A; font-weight: 600; }
+        .steps-bar .s.on .n { background: #C41E3A; color: #fff; }
+        .steps-bar .sep { color: #ddd; }
+
+        .layout { flex: 1; display: flex; overflow: hidden; }
+        /* 左：公众号 */
+        .sources { width: 230px; background: #fff; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sources-head { padding: 14px 16px; border-bottom: 1px solid #efefef; font-family: 'Noto Serif SC','Songti SC',serif; font-size: 15px; color: #2D2D2D; letter-spacing: 1px; }
+        .sources-search { padding: 10px 12px; border-bottom: 1px solid #efefef; }
+        .sources-search input { width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 8px; font-size: 13px; outline: none; }
+        .sources-search input:focus { border-color: #C41E3A; box-shadow: 0 0 0 2px rgba(196,30,58,0.1); }
+        .source-list { flex: 1; overflow-y: auto; padding: 8px; }
+        .source-item { padding: 10px 12px; margin: 2px 0; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all .25s; }
+        .source-item:hover { background: #FBE9EB; }
+        .source-item.active { background: #FBE9EB; border-left: 3px solid #C41E3A; }
+        .source-item.hidden { display: none; }
+        .source-name { font-size: 13px; color: #333; font-weight: 500; }
+        .source-count { font-size: 11px; color: #999; background: #f5f5f5; padding: 2px 8px; border-radius: 10px; }
+        /* 中：文章列表 */
+        .list-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .list-head { background: #fff; padding: 14px 24px; border-bottom: 1px solid #efefef; display: flex; justify-content: space-between; align-items: center; }
+        .list-head h2 { font-family: 'Noto Serif SC','Songti SC',serif; font-size: 16px; color: #2D2D2D; letter-spacing: 1px; }
+        .article-list { flex: 1; overflow-y: auto; padding: 16px 24px; }
+        .article-table { width: 100%; background: #fff; border-radius: 12px; border: 1px solid #EFEFEF; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03), 0 16px 40px rgba(47,48,55,0.05); overflow: hidden; }
+        .article-table table { width: 100%; border-collapse: collapse; }
+        .article-table th { background: #F8F8F8; padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; color: #333; border-bottom: 1px solid #e8e8e8; }
+        .article-table td { padding: 11px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; color: #666; }
+        .article-table tr { transition: background .2s; }
+        .article-table tr:hover { background: #FDF6F7; }
+        .article-table tr.selected { background: #FBE9EB; }
+        .article-table tr:last-child td { border-bottom: none; }
+        .article-checkbox { width: 17px; height: 17px; cursor: pointer; accent-color: #C41E3A; }
+        .article-title-link { color: #2D2D2D; text-decoration: none; font-weight: 500; }
+        .article-title-link:hover { color: #C41E3A; text-decoration: underline; }
+        .article-date { color: #999; font-size: 13px; white-space: nowrap; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; font-size: 14px; }
+        .empty-state svg { width: 40px; height: 40px; fill: none; stroke: #C41E3A; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
+        /* 右：已选面板 */
+        .picked { width: 280px; background: #fff; border-left: 1px solid #e8e8e8; display: flex; flex-direction: column; flex-shrink: 0; }
+        .picked-head { padding: 14px 16px; border-bottom: 1px solid #efefef; display: flex; justify-content: space-between; align-items: center; }
+        .picked-head .t { font-family: 'Noto Serif SC','Songti SC',serif; font-size: 15px; color: #2D2D2D; letter-spacing: 1px; }
+        .picked-head .clear { font-size: 12px; color: #999; cursor: pointer; background: none; border: none; }
+        .picked-head .clear:hover { color: #C41E3A; }
+        .picked-body { flex: 1; overflow-y: auto; padding: 10px 14px; }
+        .picked-empty { color: #bbb; font-size: 13px; text-align: center; padding: 30px 0; }
+        .pgroup { margin-bottom: 12px; }
+        .pgroup .gt { font-size: 12px; color: #C41E3A; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        .pitem { font-size: 12px; color: #555; line-height: 1.5; padding: 5px 8px; background: #F8F8F8; border-radius: 6px; margin-bottom: 5px; display: flex; justify-content: space-between; gap: 6px; align-items: flex-start; }
+        .pitem .rm { color: #ccc; cursor: pointer; flex-shrink: 0; font-size: 14px; line-height: 1.2; }
+        .pitem .rm:hover { color: #C41E3A; }
+        .picked-foot { padding: 14px 16px; border-top: 1px solid #efefef; }
+        .btn-next { width: 100%; padding: 12px; background: #C41E3A; color: #fff; border: none; border-radius: 8px; font-size: 15px; letter-spacing: 1px; cursor: pointer; transition: all .3s cubic-bezier(.2,.7,.3,1); }
+        .btn-next:hover:not(:disabled) { background: #A51830; box-shadow: 0 4px 14px rgba(196,30,58,0.22); }
+        .btn-next:disabled { opacity: .45; cursor: not-allowed; }
+        .picked-count { font-size: 13px; color: #666; text-align: center; margin-bottom: 10px; }
+        .picked-count b { color: #C41E3A; }
+
+        /* 第二步：报告要求 */
+        .req-view { flex: 1; overflow-y: auto; display: none; }
+        .req-wrap { max-width: 620px; margin: 36px auto; padding: 0 20px 60px; }
+        .panel { background: #fff; border-radius: 14px; border: 1px solid #EFEFEF; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03), 0 16px 40px rgba(47,48,55,0.05); padding: 36px; position: relative; overflow: hidden; }
+        .panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #C41E3A, #F3A9B8); }
+        .panel h2 { font-family: 'Noto Serif SC','Songti SC',serif; letter-spacing: 1px; font-size: 20px; color: #2D2D2D; margin-bottom: 6px; }
+        .panel .desc { font-size: 14px; color: #666; margin-bottom: 24px; line-height: 1.7; }
+        .panel .desc b { color: #C41E3A; }
+        .field { margin-bottom: 20px; }
+        .field > label { display: block; font-size: 14px; color: #2D2D2D; font-weight: 500; margin-bottom: 8px; }
+        .field .req { color: #C41E3A; }
+        .field input[type=text], .field input[type=email], .field textarea { width: 100%; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; transition: border-color .3s, box-shadow .3s; }
+        .field input:focus, .field textarea:focus { border-color: #C41E3A; box-shadow: 0 0 0 2px rgba(196,30,58,0.1); }
+        .field textarea { resize: vertical; min-height: 90px; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+        .chip { position: relative; }
+        .chip input { position: absolute; opacity: 0; pointer-events: none; }
+        .chip span { display: inline-block; padding: 8px 16px; border: 1px solid #e0e0e0; border-radius: 999px; font-size: 13px; color: #555; background: #fff; cursor: pointer; transition: all .25s; user-select: none; }
+        .chip span:hover { border-color: #C41E3A; color: #C41E3A; }
+        .chip input:checked + span { background: #C41E3A; border-color: #C41E3A; color: #fff; }
+        .row { display: flex; gap: 14px; flex-wrap: wrap; }
+        .row .field { flex: 1; min-width: 200px; }
+        .btn-row { display: flex; gap: 12px; }
+        .btn-back2 { flex: 0 0 auto; padding: 12px 22px; background: #fff; color: #C41E3A; border: 1px solid #C41E3A; border-radius: 8px; font-size: 15px; cursor: pointer; transition: all .3s; }
+        .btn-back2:hover { background: #FDF2F4; }
+        .btn-submit { flex: 1; padding: 12px; background: #C41E3A; color: #fff; border: none; border-radius: 8px; font-size: 15px; letter-spacing: 1px; cursor: pointer; transition: all .3s cubic-bezier(.2,.7,.3,1); }
+        .btn-submit:hover:not(:disabled) { background: #A51830; box-shadow: 0 4px 14px rgba(196,30,58,0.22); }
+        .btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+        .msg { margin-top: 14px; padding: 12px 16px; border-radius: 8px; font-size: 14px; display: none; }
+        .msg.err { display: block; background: #fff2f0; border: 1px solid #ffccc7; color: #cf1322; }
+
+        /* 成功面板 */
+        .success-view { flex: 1; overflow-y: auto; display: none; }
+        .success-panel { max-width: 520px; margin: 60px auto; text-align: center; padding: 56px 36px; }
+        .success-panel .icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(196,30,58,0.08); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+        .success-panel h2 { font-family: 'Noto Serif SC','Songti SC',serif; font-size: 22px; color: #2D2D2D; margin-bottom: 12px; }
+        .success-panel .order-no { display: inline-block; font-size: 19px; font-weight: 700; color: #C41E3A; letter-spacing: 1px; background: #FDF2F4; border: 1px dashed #E8A0AC; border-radius: 8px; padding: 8px 22px; margin: 8px 0 16px; }
+        .success-panel p { font-size: 14px; color: #666; line-height: 1.9; }
+        .success-panel .btn-home { margin-top: 22px; display: inline-block; padding: 10px 28px; background: #C41E3A; color: #fff; border-radius: 8px; font-size: 14px; text-decoration: none; transition: all .3s; }
+        .success-panel .btn-home:hover { background: #A51830; }
+
+        /* 移动端 */
+        .picked-fab { display: none; }
+        @media (max-width: 1000px) {
+            .picked { position: fixed; top: 0; right: -300px; height: 100vh; z-index: 200; transition: right .3s; box-shadow: -8px 0 24px rgba(0,0,0,0.12); }
+            .picked.open { right: 0; }
+            .picked-fab { display: flex; position: fixed; bottom: 20px; right: 20px; z-index: 150; background: #C41E3A; color: #fff; border: none; border-radius: 999px; padding: 13px 20px; font-size: 14px; letter-spacing: 1px; cursor: pointer; align-items: center; gap: 8px; box-shadow: 0 6px 18px rgba(196,30,58,0.35); }
+            .sources { width: 190px; }
+        }
+        @media (max-width: 720px) {
+            .sources { display: none; position: fixed; top: 0; left: -260px; width: 240px; height: 100vh; z-index: 200; transition: left .3s; box-shadow: 8px 0 24px rgba(0,0,0,0.12); }
+            .sources.open { left: 0; display: flex; }
+            .sources-fab { display: flex !important; position: fixed; bottom: 20px; left: 20px; z-index: 150; background: #fff; color: #C41E3A; border: 1px solid #C41E3A; border-radius: 999px; padding: 13px 20px; font-size: 14px; cursor: pointer; align-items: center; gap: 8px; }
+            .article-list { padding: 12px; }
+            .steps-bar { font-size: 12px; gap: 10px; padding: 8px 14px; }
+        }
+        .sources-fab { display: none; }
+        .mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 180; }
+        .mask.show { display: block; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="logo">化妆品行业<span>洞察平台</span> · 智能选文报告</div>
+        <a class="back" href="index.html">← 返回首页</a>
+    </div>
+    <div class="steps-bar">
+        <div class="s on" id="stepBar1"><div class="n">1</div>选择文章</div>
+        <div class="sep">→</div>
+        <div class="s" id="stepBar2"><div class="n">2</div>报告要求</div>
+        <div class="sep">→</div>
+        <div class="s" id="stepBar3"><div class="n">3</div>提交完成</div>
+    </div>
+
+    <!-- 第一步：选文 -->
+    <div class="layout" id="pickView">
+        <div class="sources" id="sourcesPanel">
+            <div class="sources-head">公众号列表</div>
+            <div class="sources-search"><input type="text" id="sourceSearch" placeholder="搜索公众号..." oninput="filterSources()"></div>
+            <div class="source-list" id="sourceList"><div class="empty-state" style="padding:30px 10px">加载中…</div></div>
+        </div>
+        <div class="list-wrap">
+            <div class="list-head">
+                <h2 id="pageTitle">请选择公众号</h2>
+                <span style="font-size:12px;color:#999" id="updateInfo"></span>
+            </div>
+            <div class="article-list" id="articleList">
+                <div class="empty-state"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><div>请在左侧选择公众号，勾选您感兴趣的文章</div></div>
+            </div>
+        </div>
+        <div class="picked" id="pickedPanel">
+            <div class="picked-head">
+                <div class="t">已选文章</div>
+                <button class="clear" onclick="clearAll()">清空</button>
+            </div>
+            <div class="picked-body" id="pickedBody">
+                <div class="picked-empty">尚未选择文章</div>
+            </div>
+            <div class="picked-foot">
+                <div class="picked-count" id="pickedCount">已选 <b>0</b> 篇</div>
+                <button class="btn-next" id="btnNext" onclick="gotoStep2()" disabled>下一步：生成报告 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二步：报告要求 -->
+    <div class="req-view" id="reqView">
+        <div class="req-wrap">
+            <div class="panel">
+                <h2>报告要求</h2>
+                <div class="desc">您已选择 <b id="selSummary">0</b> 篇文章，报告将基于这些文章生成，完成后发送至您的邮箱。</div>
+                <form id="reportForm" novalidate>
+                    <div class="field">
+                        <label>报告类型 <span class="req">*</span></label>
+                        <div class="chips">
+                            <label class="chip"><input type="radio" name="rtype" value="事实内容输出" checked><span>事实内容输出 · 原文事实汇编</span></label>
+                            <label class="chip"><input type="radio" name="rtype" value="综合性概述"><span>综合性概述 · 归纳提炼</span></label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>篇幅 <span class="req">*</span></label>
+                        <div class="chips">
+                            <label class="chip"><input type="radio" name="rlength" value="简报（1-2页）" checked><span>简报 1-2页</span></label>
+                            <label class="chip"><input type="radio" name="rlength" value="标准（3-5页）"><span>标准 3-5页</span></label>
+                            <label class="chip"><input type="radio" name="rlength" value="深度（5-10页）"><span>深度 5-10页</span></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="field">
+                            <label>您的称呼 <span class="req">*</span></label>
+                            <input type="text" id="contactName" placeholder="怎么称呼您">
+                        </div>
+                        <div class="field">
+                            <label>联系邮箱 <span class="req">*</span></label>
+                            <input type="email" id="contactEmail" placeholder="name@example.com">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>微信 / 电话 <span style="font-weight:400;color:#999;font-size:12px">（选填）</span></label>
+                        <input type="text" id="contactOther" placeholder="便于更快联系您">
+                    </div>
+                    <div class="field">
+                        <label>补充说明 <span style="font-weight:400;color:#999;font-size:12px">（选填）</span></label>
+                        <textarea id="notes" placeholder="请补充任何特殊要求（如重点关注的角度、排除的内容等）"></textarea>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn-back2" onclick="backToStep1()">← 重新选文</button>
+                        <button type="submit" class="btn-submit" id="submitBtn">提交生成需求</button>
+                    </div>
+                    <div class="msg" id="msg"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三步：成功 -->
+    <div class="success-view" id="successView">
+        <div class="panel success-panel">
+            <div class="icon"><svg viewBox="0 0 24 24" style="width:30px;height:30px" fill="none" stroke="#C41E3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <h2>需求提交成功</h2>
+            <div class="order-no" id="orderNo"></div>
+            <p>我们已收到您的选文报告需求，将在 <strong>24 小时内</strong>完成报告并发送至您的邮箱。<br>请留意查收邮件。</p>
+            <a class="btn-home" href="index.html">返回首页</a>
+        </div>
+    </div>
+
+    <button class="sources-fab" id="sourcesFab" onclick="toggleSources()">☰ 公众号</button>
+    <button class="picked-fab" id="pickedFab" onclick="togglePicked()">已选 <span id="fabCount">0</span> 篇 →</button>
+    <div class="mask" id="mask" onclick="closePanels()"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        var ARTICLE_DATA = null, currentSource = null, allArticles = [];
+        var selectedArticles = new Map(); // key: source_index -> {source, title, publish_date, url}
+
+        function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+        function loadData() {
+            fetch('data.v73.json?t=' + Date.now(), { cache: 'no-store' })
+                .then(function(r) { if (!r.ok) throw new Error(); return r.json(); })
+                .then(function(d) {
+                    ARTICLE_DATA = d;
+                    renderSources();
+                    if (d.stats) document.getElementById('updateInfo').textContent = '共 ' + d.stats.total_articles + ' 篇 · ' + d.stats.source_count + ' 个公众号';
+                })
+                .catch(function() {
+                    document.getElementById('sourceList').innerHTML = '<div class="empty-state" style="padding:30px 10px;color:#cf1322">数据加载失败，请刷新重试</div>';
+                });
+        }
+
+        function renderSources() {
+            document.getElementById('sourceList').innerHTML = ARTICLE_DATA.sources.map(function(s) {
+                return '<div class="source-item" data-source="' + esc(s.name) + '" onclick="selectSource(\'' + esc(s.name).replace(/'/g, "\\'") + '\')">' +
+                    '<span class="source-name">' + esc(s.name) + '</span><span class="source-count">' + s.count + '篇</span></div>';
+            }).join('');
+        }
+
+        function filterSources() {
+            var kw = document.getElementById('sourceSearch').value.toLowerCase();
+            document.querySelectorAll('.source-item').forEach(function(item) {
+                item.classList.toggle('hidden', item.querySelector('.source-name').textContent.toLowerCase().indexOf(kw) < 0);
+            });
+        }
+
+        function selectSource(name) {
+            currentSource = name;
+            document.querySelectorAll('.source-item').forEach(function(i) { i.classList.toggle('active', i.dataset.source === name); });
+            document.getElementById('pageTitle').textContent = name;
+            allArticles = (ARTICLE_DATA.articles[name] || []).slice().sort(function(a, b) {
+                return new Date(b.publish_date || '1970-01-01') - new Date(a.publish_date || '1970-01-01');
+            });
+            // 注意：选中键基于排序后索引与原数组解耦，改用 url 作为稳定键
+            renderArticles();
+            closePanels();
+        }
+
+        function keyOf(source, article) { return source + '|' + article.url; }
+
+        function renderArticles() {
+            if (!allArticles.length) {
+                document.getElementById('articleList').innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><div>该公众号暂无文章</div></div>';
+                return;
+            }
+            var selCount = 0;
+            allArticles.forEach(function(a) { if (selectedArticles.has(keyOf(currentSource, a))) selCount++; });
+            var allSel = selCount === allArticles.length;
+            document.getElementById('articleList').innerHTML = '<div class="article-table"><table>' +
+                '<thead><tr><th style="width:40px"><input type="checkbox" class="article-checkbox" ' + (allSel ? 'checked' : '') + ' onchange="toggleAll(this)"></th><th>文章名称</th><th style="width:110px">时间</th></tr></thead><tbody>' +
+                allArticles.map(function(a, i) {
+                    var sel = selectedArticles.has(keyOf(currentSource, a));
+                    return '<tr class="' + (sel ? 'selected' : '') + '" id="row-' + i + '">' +
+                        '<td><input type="checkbox" class="article-checkbox" ' + (sel ? 'checked' : '') + ' onchange="toggleOne(' + i + ')"></td>' +
+                        '<td><a href="' + esc(a.url) + '" target="_blank" class="article-title-link">' + esc(a.title) + '</a></td>' +
+                        '<td class="article-date">' + esc(a.publish_date || '') + '</td></tr>';
+                }).join('') + '</tbody></table></div>';
+        }
+
+        function toggleOne(i) {
+            var a = allArticles[i], k = keyOf(currentSource, a);
+            if (selectedArticles.has(k)) selectedArticles.delete(k);
+            else selectedArticles.set(k, { source: currentSource, title: a.title, publish_date: a.publish_date, url: a.url });
+            renderArticles();
+            renderPicked();
+        }
+
+        function toggleAll(cb) {
+            if (cb.checked) allArticles.forEach(function(a) { selectedArticles.set(keyOf(currentSource, a), { source: currentSource, title: a.title, publish_date: a.publish_date, url: a.url }); });
+            else allArticles.forEach(function(a) { selectedArticles.delete(keyOf(currentSource, a)); });
+            renderArticles();
+            renderPicked();
+        }
+
+        function removePicked(k) {
+            selectedArticles.delete(k);
+            renderArticles();
+            renderPicked();
+        }
+
+        function clearAll() {
+            selectedArticles.clear();
+            renderArticles();
+            renderPicked();
+        }
+
+        function renderPicked() {
+            var body = document.getElementById('pickedBody');
+            var n = selectedArticles.size;
+            document.getElementById('pickedCount').innerHTML = '已选 <b>' + n + '</b> 篇';
+            document.getElementById('fabCount').textContent = n;
+            document.getElementById('btnNext').disabled = !n;
+            if (!n) { body.innerHTML = '<div class="picked-empty">尚未选择文章</div>'; return; }
+            var groups = {};
+            selectedArticles.forEach(function(a, k) {
+                (groups[a.source] = groups[a.source] || []).push({ k: k, a: a });
+            });
+            body.innerHTML = Object.keys(groups).map(function(src) {
+                var items = groups[src];
+                return '<div class="pgroup"><div class="gt"><span>' + esc(src) + '</span><span>' + items.length + ' 篇</span></div>' +
+                    items.map(function(it) {
+                        var t = it.a.title.length > 24 ? it.a.title.slice(0, 24) + '…' : it.a.title;
+                        return '<div class="pitem"><span>' + esc(t) + '</span><span class="rm" onclick="removePicked(\'' + esc(it.k).replace(/'/g, "\\'") + '\')">×</span></div>';
+                    }).join('') + '</div>';
+            }).join('');
+        }
+
+        // 步骤切换
+        function setStep(n) {
+            document.getElementById('pickView').style.display = n === 1 ? 'flex' : 'none';
+            document.getElementById('reqView').style.display = n === 2 ? 'block' : 'none';
+            document.getElementById('successView').style.display = n === 3 ? 'block' : 'none';
+            [1, 2, 3].forEach(function(i) { document.getElementById('stepBar' + i).classList.toggle('on', i === n); });
+            document.getElementById('pickedFab').style.display = n === 1 ? '' : 'none';
+            document.getElementById('sourcesFab').style.display = n === 1 ? '' : 'none';
+            window.scrollTo(0, 0);
+        }
+        function gotoStep2() {
+            if (!selectedArticles.size) return;
+            var groups = {};
+            selectedArticles.forEach(function(a) { groups[a.source] = (groups[a.source] || 0) + 1; });
+            document.getElementById('selSummary').textContent = selectedArticles.size;
+            setStep(2);
+        }
+        function backToStep1() { setStep(1); }
+
+        // 移动端面板
+        function togglePicked() { document.getElementById('pickedPanel').classList.toggle('open'); document.getElementById('mask').classList.toggle('show', document.getElementById('pickedPanel').classList.contains('open')); }
+        function toggleSources() { document.getElementById('sourcesPanel').classList.toggle('open'); document.getElementById('mask').classList.toggle('show', document.getElementById('sourcesPanel').classList.contains('open')); }
+        function closePanels() { document.getElementById('pickedPanel').classList.remove('open'); document.getElementById('sourcesPanel').classList.remove('open'); document.getElementById('mask').classList.remove('show'); }
+
+        // 提交
+        document.getElementById('reportForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var msg = document.getElementById('msg');
+            msg.className = 'msg'; msg.textContent = '';
+            var name = document.getElementById('contactName').value.trim();
+            var email = document.getElementById('contactEmail').value.trim();
+            if (!name) { msg.className = 'msg err'; msg.textContent = '请填写您的称呼。'; return; }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = 'msg err'; msg.textContent = '请填写有效的联系邮箱。'; return; }
+
+            var btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.textContent = '提交中...';
+
+            var now = new Date();
+            var pad = function(n) { return String(n).padStart(2, '0'); };
+            var refCode = 'AR-' + now.getFullYear() + pad(now.getMonth()+1) + pad(now.getDate()) + '-' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+
+            var articles = [];
+            selectedArticles.forEach(function(a) { articles.push(a); });
+
+            var payload = {
+                ref_code: refCode,
+                report_type: document.querySelector('input[name="rtype"]:checked').value,
+                length: document.querySelector('input[name="rlength"]:checked').value,
+                articles: articles,
+                article_count: articles.length,
+                name: name,
+                email: email,
+                contact: document.getElementById('contactOther').value.trim() || null,
+                notes: document.getElementById('notes').value.trim() || null,
+            };
+
+            try {
+                var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                var r = await sb.from('article_reports').insert(payload);
+                if (r.error) throw r.error;
+                document.getElementById('orderNo').textContent = '需求单编号：' + refCode;
+                setStep(3);
+            } catch (err) {
+                msg.className = 'msg err';
+                msg.textContent = '提交失败：服务暂未上线，请稍后重试。';
+            }
+            btn.disabled = false; btn.textContent = '提交生成需求';
+        });
+
+        loadData();
+    </script>
+</body>
+</html>
