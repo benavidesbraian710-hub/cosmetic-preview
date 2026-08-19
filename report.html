@@ -37,6 +37,12 @@
         .list-wrap { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .list-head { background: #fff; padding: 14px 24px; border-bottom: 1px solid #efefef; display: flex; justify-content: space-between; align-items: center; }
         .list-head h2 { font-family: 'Noto Serif SC','Songti SC',serif; font-size: 16px; color: #2D2D2D; letter-spacing: 1px; }
+        .filter-bar { background: #fff; padding: 10px 24px; border-bottom: 1px solid #efefef; display: none; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .filter-bar.show { display: flex; }
+        .filter-bar label { font-size: 13px; color: #666; }
+        .filter-bar select, .filter-bar input[type="date"] { padding: 6px 12px; border: 1px solid #d9d9d9; border-radius: 8px; font-size: 13px; outline: none; cursor: pointer; background: #fff; transition: border-color .3s, box-shadow .3s; }
+        .filter-bar select:focus, .filter-bar input[type="date"]:focus { border-color: #C41E3A; box-shadow: 0 0 0 2px rgba(196,30,58,0.1); }
+        .filter-bar .finfo { font-size: 12px; color: #999; }
         .article-list { flex: 1; overflow-y: auto; padding: 16px 24px; }
         .article-table { width: 100%; background: #fff; border-radius: 12px; border: 1px solid #EFEFEF; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03), 0 16px 40px rgba(47,48,55,0.05); overflow: hidden; }
         .article-table table { width: 100%; border-collapse: collapse; }
@@ -158,6 +164,24 @@
                 <h2 id="pageTitle">请选择公众号</h2>
                 <span style="font-size:12px;color:#999" id="updateInfo"></span>
             </div>
+            <div class="filter-bar" id="filterBar">
+                <label>时间范围：</label>
+                <select id="timeFilter" onchange="applyFilter()">
+                    <option value="all">全部时间</option>
+                    <option value="3">最近3天</option>
+                    <option value="7" selected>最近7天</option>
+                    <option value="15">最近15天</option>
+                    <option value="30">最近30天</option>
+                    <option value="90">最近90天</option>
+                    <option value="custom">自定义范围...</option>
+                </select>
+                <span id="customDateRange" style="display:none;align-items:center;gap:8px">
+                    <input type="date" id="startDate" onchange="applyFilter()">
+                    <span style="color:#999;font-size:12px">至</span>
+                    <input type="date" id="endDate" onchange="applyFilter()">
+                </span>
+                <span class="finfo" id="filterInfo"></span>
+            </div>
             <div class="article-list" id="articleList">
                 <div class="empty-state"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><div>请在左侧选择公众号，勾选您感兴趣的文章</div></div>
             </div>
@@ -210,12 +234,12 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label>微信 / 电话 <span style="font-weight:400;color:#999;font-size:12px">（选填）</span></label>
-                        <input type="text" id="contactOther" placeholder="便于更快联系您">
+                        <label>报告内容和具体要求 <span class="req">*</span></label>
+                        <textarea id="requirements" placeholder="请描述您需要报告包含的内容和具体要求，如重点关注的角度、需要对比的维度等"></textarea>
                     </div>
                     <div class="field">
-                        <label>补充说明 <span style="font-weight:400;color:#999;font-size:12px">（选填）</span></label>
-                        <textarea id="notes" placeholder="请补充任何特殊要求（如重点关注的角度、排除的内容等）"></textarea>
+                        <label>微信 / 电话 <span style="font-weight:400;color:#999;font-size:12px">（选填）</span></label>
+                        <input type="text" id="contactOther" placeholder="便于更快联系您">
                     </div>
                     <div class="btn-row">
                         <button type="button" class="btn-back2" onclick="backToStep1()">← 重新选文</button>
@@ -245,7 +269,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script>
-        var ARTICLE_DATA = null, currentSource = null, allArticles = [];
+        var ARTICLE_DATA = null, currentSource = null, allArticles = [], viewArticles = [];
         var selectedArticles = new Map(); // key: source_index -> {source, title, publish_date, url}
 
         function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -284,24 +308,49 @@
             allArticles = (ARTICLE_DATA.articles[name] || []).slice().sort(function(a, b) {
                 return new Date(b.publish_date || '1970-01-01') - new Date(a.publish_date || '1970-01-01');
             });
-            // 注意：选中键基于排序后索引与原数组解耦，改用 url 作为稳定键
-            renderArticles();
+            document.getElementById('filterBar').classList.add('show');
+            applyFilter();
             closePanels();
+        }
+
+        function applyFilter() {
+            var v = document.getElementById('timeFilter').value;
+            document.getElementById('customDateRange').style.display = v === 'custom' ? 'inline-flex' : 'none';
+            var info = document.getElementById('filterInfo');
+            if (v === 'all') {
+                viewArticles = allArticles.slice();
+                info.textContent = '';
+            } else if (v === 'custom') {
+                var s = document.getElementById('startDate').value, e = document.getElementById('endDate').value;
+                if (!s || !e) {
+                    viewArticles = allArticles.slice();
+                    info.textContent = '请选择起止日期';
+                } else {
+                    var sd = new Date(s), ed = new Date(e); ed.setHours(23, 59, 59, 999);
+                    viewArticles = allArticles.filter(function(a) { var d = new Date(a.publish_date); return d >= sd && d <= ed; });
+                    info.textContent = '显示 ' + viewArticles.length + ' / ' + allArticles.length + ' 篇';
+                }
+            } else {
+                var cutoff = new Date(); cutoff.setHours(0, 0, 0, 0); cutoff.setDate(cutoff.getDate() - parseInt(v));
+                viewArticles = allArticles.filter(function(a) { var d = new Date(a.publish_date); d.setHours(0,0,0,0); return d >= cutoff; });
+                info.textContent = '显示 ' + viewArticles.length + ' / ' + allArticles.length + ' 篇';
+            }
+            renderArticles();
         }
 
         function keyOf(source, article) { return source + '|' + article.url; }
 
         function renderArticles() {
-            if (!allArticles.length) {
-                document.getElementById('articleList').innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><div>该公众号暂无文章</div></div>';
+            if (!viewArticles.length) {
+                document.getElementById('articleList').innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><div>该范围暂无文章</div></div>';
                 return;
             }
             var selCount = 0;
-            allArticles.forEach(function(a) { if (selectedArticles.has(keyOf(currentSource, a))) selCount++; });
-            var allSel = selCount === allArticles.length;
+            viewArticles.forEach(function(a) { if (selectedArticles.has(keyOf(currentSource, a))) selCount++; });
+            var allSel = selCount === viewArticles.length;
             document.getElementById('articleList').innerHTML = '<div class="article-table"><table>' +
                 '<thead><tr><th style="width:40px"><input type="checkbox" class="article-checkbox" ' + (allSel ? 'checked' : '') + ' onchange="toggleAll(this)"></th><th>文章名称</th><th style="width:110px">时间</th></tr></thead><tbody>' +
-                allArticles.map(function(a, i) {
+                viewArticles.map(function(a, i) {
                     var sel = selectedArticles.has(keyOf(currentSource, a));
                     return '<tr class="' + (sel ? 'selected' : '') + '" id="row-' + i + '">' +
                         '<td><input type="checkbox" class="article-checkbox" ' + (sel ? 'checked' : '') + ' onchange="toggleOne(' + i + ')"></td>' +
@@ -311,7 +360,7 @@
         }
 
         function toggleOne(i) {
-            var a = allArticles[i], k = keyOf(currentSource, a);
+            var a = viewArticles[i], k = keyOf(currentSource, a);
             if (selectedArticles.has(k)) selectedArticles.delete(k);
             else selectedArticles.set(k, { source: currentSource, title: a.title, publish_date: a.publish_date, url: a.url });
             renderArticles();
@@ -319,8 +368,8 @@
         }
 
         function toggleAll(cb) {
-            if (cb.checked) allArticles.forEach(function(a) { selectedArticles.set(keyOf(currentSource, a), { source: currentSource, title: a.title, publish_date: a.publish_date, url: a.url }); });
-            else allArticles.forEach(function(a) { selectedArticles.delete(keyOf(currentSource, a)); });
+            if (cb.checked) viewArticles.forEach(function(a) { selectedArticles.set(keyOf(currentSource, a), { source: currentSource, title: a.title, publish_date: a.publish_date, url: a.url }); });
+            else viewArticles.forEach(function(a) { selectedArticles.delete(keyOf(currentSource, a)); });
             renderArticles();
             renderPicked();
         }
@@ -387,6 +436,8 @@
             e.preventDefault();
             var msg = document.getElementById('msg');
             msg.className = 'msg'; msg.textContent = '';
+            var requirements = document.getElementById('requirements').value.trim();
+            if (!requirements) { msg.className = 'msg err'; msg.textContent = '请填写报告内容和具体要求。'; return; }
             var name = document.getElementById('contactName').value.trim();
             var email = document.getElementById('contactEmail').value.trim();
             if (!name) { msg.className = 'msg err'; msg.textContent = '请填写您的称呼。'; return; }
@@ -411,7 +462,7 @@
                 name: name,
                 email: email,
                 contact: document.getElementById('contactOther').value.trim() || null,
-                notes: document.getElementById('notes').value.trim() || null,
+                requirements: requirements,
             };
 
             try {

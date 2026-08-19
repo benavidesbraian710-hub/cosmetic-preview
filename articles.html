@@ -122,23 +122,6 @@
                 <button class="btn btn-success" id="exportBtn" onclick="exportSelected()" disabled>导出选中</button>
             </div>
         </div>
-        <div class="filter-bar" id="filterBar" style="display:none;">
-            <label>时间筛选：</label>
-            <select id="timeFilter" onchange="filterByTime()">
-                <option value="all">全部时间</option>
-                <option value="3">最近3天</option>
-                <option value="7">最近7天</option>
-                <option value="15">最近15天</option>
-                <option value="30">最近30天</option>
-                <option value="custom">自定义范围...</option>
-            </select>
-            <div id="customDateRange" style="display:none; margin-left:10px;">
-                <input type="date" id="startDate" onchange="filterByTime()">
-                <span style="margin:0 5px;">至</span>
-                <input type="date" id="endDate" onchange="filterByTime()">
-            </div>
-            <span class="filter-info" id="filterInfo"></span>
-        </div>
         <div class="article-list" id="articleList">
             <div class="empty-state"><div class="icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div>请在左侧选择公众号查看文章</div></div>
         </div>
@@ -249,78 +232,24 @@
             document.getElementById('pageTitle').textContent = sourceName + ' 的所有文章';
             document.getElementById('articleList').innerHTML = '<div class="loading">加载中...</div>';
             
-            // 显示筛选栏
-            document.getElementById('filterBar').style.display = 'flex';
-            
             setTimeout(function() {
                 if (ARTICLE_DATA && ARTICLE_DATA.articles) {
                     allArticles = ARTICLE_DATA.articles[sourceName] || [];
                 } else {
                     allArticles = [];
                 }
-                // 重置时间筛选
-                document.getElementById('timeFilter').value = 'all';
                 filterByTime();
             }, 300);
         }
 
         function filterByTime() {
-            var filterType = document.getElementById('timeFilter').value;
-            var now = new Date();
-            now.setHours(0, 0, 0, 0);
-            
-            // 显示/隐藏自定义日期范围
-            var customRange = document.getElementById('customDateRange');
-            if (filterType === 'custom') {
-                customRange.style.display = 'flex';
-            } else {
-                customRange.style.display = 'none';
-            }
-            
-            if (filterType === 'all') {
-                filteredArticles = allArticles.slice();
-                document.getElementById('filterInfo').textContent = '';
-            } else if (filterType === 'custom') {
-                var startDateStr = document.getElementById('startDate').value;
-                var endDateStr = document.getElementById('endDate').value;
-                
-                if (!startDateStr || !endDateStr) {
-                    filteredArticles = allArticles.slice();
-                    document.getElementById('filterInfo').textContent = '请选择开始和结束日期';
-                } else {
-                    var startDate = new Date(startDateStr);
-                    var endDate = new Date(endDateStr);
-                    endDate.setHours(23, 59, 59, 999);
-                    
-                    filteredArticles = allArticles.filter(function(a) {
-                        var articleDate = new Date(a.publish_date);
-                        return articleDate >= startDate && articleDate <= endDate;
-                    });
-                    
-                    document.getElementById('filterInfo').textContent = 
-                        '（' + startDateStr + ' 至 ' + endDateStr + '，显示 ' + filteredArticles.length + ' / ' + allArticles.length + ' 篇）';
-                }
-            } else {
-                var cutoffDate = new Date(now);
-                cutoffDate.setDate(cutoffDate.getDate() - parseInt(filterType));
-                
-                filteredArticles = allArticles.filter(function(a) {
-                    var articleDate = new Date(a.publish_date);
-                    articleDate.setHours(0, 0, 0, 0);
-                    return articleDate >= cutoffDate;
-                });
-                
-                document.getElementById('filterInfo').textContent = 
-                    '（显示 ' + filteredArticles.length + ' / ' + allArticles.length + ' 篇）';
-            }
-            
-            // 按日期倒序排列（最新在前）
+            // 时间筛选组件已移除：直接显示全部文章，按日期倒序
+            filteredArticles = allArticles.slice();
             filteredArticles.sort(function(a, b) {
                 var dateA = new Date(a.publish_date || '1970-01-01');
                 var dateB = new Date(b.publish_date || '1970-01-01');
                 return dateB - dateA;
             });
-            
             renderArticles(filteredArticles);
         }
 
