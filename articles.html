@@ -196,8 +196,7 @@
             var stats = ARTICLE_DATA.stats;
             document.getElementById('stats').innerHTML = 
                 '<div>总文章数: ' + stats.total_articles + '</div>' +
-                '<div>公众号数: ' + stats.source_count + '</div>' +
-                '<div>日期范围: ' + stats.date_range.start + ' ~ ' + stats.date_range.end + '</div>';
+                '<div>公众号数: ' + stats.source_count + '</div>';
             document.getElementById('lastUpdate').textContent = new Date().toLocaleString('zh-CN');
         }
 
