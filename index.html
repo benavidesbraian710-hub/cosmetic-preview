@@ -61,14 +61,16 @@
         .section { max-width: 1120px; margin: 0 auto; padding: 80px 48px 72px; width: 100%; }
         .section-title { font-family: var(--serif); font-size: 26px; font-weight: 700; text-align: center; margin-bottom: 10px; }
         .section-sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 48px; }
-        .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-        .card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 36px 30px; text-decoration: none; color: var(--ink); transition: all .35s var(--spring); position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03), 0 16px 40px rgba(47,48,55,0.04); }
+        .cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+        .card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 32px 26px; text-decoration: none; color: var(--ink); transition: all .35s var(--spring); position: relative; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03), 0 16px 40px rgba(47,48,55,0.04); }
+        .card:nth-child(1), .card:nth-child(2), .card:nth-child(3) { grid-column: span 2; }
+        .card:nth-child(4), .card:nth-child(5) { grid-column: span 3; }
         .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #C41E3A, #F3A9B8); transform: scaleX(0); transform-origin: left; transition: transform .4s var(--spring); }
         .card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 12px 24px rgba(34,42,53,0.07), 0 32px 64px rgba(47,48,55,0.10); border-color: #E8E8E8; }
         .card:hover::before { transform: scaleX(1); }
-        .card .icon { width: 52px; height: 52px; border-radius: 12px; background: #FBE9EB; display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
-        .card .icon svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .35s var(--spring); }
-        .card:hover .icon svg { transform: scale(1.05) rotate(-4deg); }
+        .card .icon { width: 48px; height: 48px; border-radius: 12px; background: #FBE9EB; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .card .icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .35s var(--spring); }
+        .card:hover .icon svg { transform: scale(1.08) rotate(-4deg); }
 
         /* ── 鼠标交互：3D倾斜+跟随光斑（仅触悬停设备） ── */
         .hero-glow { position: absolute; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(196,30,58,0.08) 0%, transparent 65%); pointer-events: none; left: 0; top: 0; transform: translate(-50%, -50%); transition: transform .3s cubic-bezier(.2,.7,.3,1); z-index: 0; display: none; }
@@ -78,9 +80,9 @@
             .card::after { content: ''; position: absolute; inset: 0; border-radius: 14px; background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(196,30,58,0.06), transparent 65%); opacity: 0; transition: opacity .3s; pointer-events: none; }
             .card:hover::after { opacity: 1; }
         }
-        .card h3 { font-family: var(--serif); font-size: 19px; font-weight: 700; margin-bottom: 12px; }
-        .card p { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 24px; flex: 1; }
-        .card .go { font-size: 14px; color: var(--accent); font-weight: 600; letter-spacing: 1px; }
+        .card h3 { font-family: var(--serif); font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+        .card p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; flex: 1; }
+        .card .go { font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: 1px; }
         .card:hover .go { color: var(--accent-hover); }
 
         /* ── 最新收录：独立区块（保持原样式） ── */
@@ -107,8 +109,16 @@
         .reveal.revealed { opacity: 1; transform: none; }
         @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
-        @media (max-width: 860px) {
+        @media (max-width: 960px) {
+            .cards { grid-template-columns: repeat(2, 1fr); }
+            .card:nth-child(1), .card:nth-child(2), .card:nth-child(3), .card:nth-child(4), .card:nth-child(5) { grid-column: span 1; }
+            .card:nth-child(5) { grid-column: span 2; }
+        }
+        @media (max-width: 640px) {
             .cards { grid-template-columns: 1fr; }
+            .card:nth-child(5) { grid-column: span 1; }
+        }
+        @media (max-width: 860px) {
             .hero { padding: 64px 24px; } .hero h1 { font-size: 30px; }
             .hero-stats > div { padding: 0 18px; } .hero-stats .num { font-size: 28px; }
             .cta-row { flex-direction: column; align-items: center; }
