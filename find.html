@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能找文 - 化妆品行业洞察平台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF; --surface: #FFFFFF; --panel: #F8F8F8;
+            --ink: #2D2D2D; --muted: #8A8A8A;
+            --accent: #C41E3A; --accent-hover: #A51830;
+            --border: #EFEFEF;
+            --serif: 'Noto Serif SC', Georgia, 'Songti SC', 'SimSun', serif;
+            --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            --spring: cubic-bezier(.34,1.56,.64,1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--sans); background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; color: var(--ink); }
+
+        /* ── 顶栏 ── */
+        .topbar { padding: 0 48px; height: 68px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 10; border-bottom: 1px solid var(--border); }
+        .topbar .logo { font-family: var(--serif); font-size: 19px; font-weight: 700; letter-spacing: 1px; }
+        .topbar .logo em { color: var(--accent); font-style: normal; }
+        .topbar nav a { font-size: 14px; color: var(--muted); text-decoration: none; margin-left: 28px; transition: color .2s; }
+        .topbar nav a:hover, .topbar nav a.active { color: var(--accent); }
+
+        /* ── 搜索区 ── */
+        .search-hero { background: linear-gradient(180deg, #FFFFFF 0%, #FDF9F9 100%); padding: 72px 48px 56px; text-align: center; border-bottom: 1px solid var(--border); }
+        .search-inner { max-width: 720px; margin: 0 auto; }
+        .search-kicker { font-family: 'Bricolage Grotesque', var(--sans); font-size: 12px; letter-spacing: 4px; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
+        .search-title { font-family: var(--serif); font-size: 32px; font-weight: 900; margin-bottom: 12px; }
+        .search-sub { font-size: 15px; color: var(--muted); margin-bottom: 36px; line-height: 1.7; }
+        .search-box { position: relative; max-width: 640px; margin: 0 auto; }
+        .search-input { width: 100%; padding: 18px 56px 18px 24px; font-size: 16px; border: 2px solid var(--border); border-radius: 14px; outline: none; transition: all .3s var(--spring); background: var(--surface); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(196,30,58,0.08); }
+        .search-input::placeholder { color: #AAAAAA; }
+        .search-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: none; border-radius: 10px; background: var(--accent); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .25s var(--spring); }
+        .search-btn:hover { background: var(--accent-hover); transform: translateY(-50%) scale(1.05); }
+        .search-btn svg { width: 20px; height: 20px; }
+        .search-examples { margin-top: 20px; font-size: 13px; color: var(--muted); }
+        .search-examples a { color: var(--accent); text-decoration: none; margin: 0 6px; }
+        .search-examples a:hover { text-decoration: underline; }
+
+        /* ── 结果区 ── */
+        .results-section { max-width: 900px; margin: 0 auto; padding: 48px; width: 100%; flex: 1; }
+        .results-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .results-count { font-size: 15px; color: var(--ink); }
+        .results-count strong { color: var(--accent); font-weight: 700; }
+        .results-sort { font-size: 13px; color: var(--muted); }
+        .result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 16px; transition: all .3s var(--spring); position: relative; overflow: hidden; }
+        .result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), #F3A9B8); transform: scaleX(0); transform-origin: left; transition: transform .35s var(--spring); }
+        .result-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-color: #E5E5E5; }
+        .result-card:hover::before { transform: scaleX(1); }
+        .result-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+        .result-source { font-size: 12px; color: var(--accent); background: #FBE9EB; padding: 3px 10px; border-radius: 8px; font-weight: 500; }
+        .result-date { font-size: 12px; color: var(--muted); }
+        .result-score { font-size: 11px; color: #888; background: #F5F5F5; padding: 2px 8px; border-radius: 6px; }
+        .result-title { font-size: 17px; font-weight: 600; color: var(--ink); margin-bottom: 10px; line-height: 1.5; }
+        .result-title a { color: inherit; text-decoration: none; transition: color .2s; }
+        .result-title a:hover { color: var(--accent); }
+        .result-reason { font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 16px; padding-left: 12px; border-left: 3px solid #F0F0F0; }
+        .result-actions { display: flex; gap: 12px; }
+        .btn-add { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--accent); background: #FBE9EB; border: none; border-radius: 8px; cursor: pointer; transition: all .25s var(--spring); }
+        .btn-add:hover { background: var(--accent); color: #fff; }
+        .btn-add svg { width: 14px; height: 14px; }
+        .btn-view { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
+        .btn-view:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* ── 空状态 ── */
+        .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
+        .empty-state svg { width: 64px; height: 64px; stroke: #DDD; margin-bottom: 20px; }
+        .empty-state p { font-size: 15px; }
+
+        /* ── 加载状态 ── */
+        .loading { text-align: center; padding: 60px 20px; }
+        .loading-spinner { width: 40px; height: 40px; border: 3px solid #F0F0F0; border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading p { color: var(--muted); font-size: 14px; }
+
+        .footer { text-align: center; padding: 26px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); margin-top: auto; }
+
+        @media (max-width: 768px) {
+            .topbar { padding: 0 20px; }
+            .search-hero { padding: 48px 20px 40px; }
+            .search-title { font-size: 24px; }
+            .results-section { padding: 32px 20px; }
+            .result-card { padding: 20px; }
+            .result-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="logo">化妆品行业<em>洞察平台</em></div>
+        <nav>
+            <a href="articles.html">文章检索</a>
+            <a href="submit.html">提交需求</a>
+            <a href="service.html">定制服务</a>
+            <a href="find.html" class="active">智能找文</a>
+        </nav>
+    </div>
+
+    <div class="search-hero">
+        <div class="search-inner">
+            <div class="search-kicker">AI-Powered Search</div>
+            <h1 class="search-title">智能找文</h1>
+            <p class="search-sub">用自然语言描述您的需求，AI 为您推荐最相关的行业文章</p>
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="例如：近期化妆品行业最新动态、抗衰老成分趋势、新规政策解读…">
+                <button class="search-btn" onclick="doSearch()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </button>
+            </div>
+            <div class="search-examples">
+                试试：<a href="#" onclick="setQuery('近期化妆品行业最新动态')">行业动态</a>
+                <a href="#" onclick="setQuery('抗衰老成分趋势')">抗衰老</a>
+                <a href="#" onclick="setQuery('化妆品新规政策')">政策法规</a>
+                <a href="#" onclick="setQuery('国货品牌崛起')">国货品牌</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-section" id="resultsSection" style="display: none;">
+        <div class="results-header">
+            <div class="results-count">找到 <strong id="resultCount">0</strong> 篇相关文章</div>
+            <div class="results-sort">按相关度排序</div>
+        </div>
+        <div id="resultsList"></div>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <p>输入您的需求，AI 为您智能推荐相关文章</p>
+    </div>
+
+    <div class="loading" id="loadingState" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>AI 正在检索相关文章…</p>
+    </div>
+
+    <div class="footer">化妆品行业洞察平台 · 智能找文</div>
+
+    <script>
+        // 示例数据
+        var mockResults = [
+            { id: 1, title: "2026年化妆品行业半年报：国货品牌市场份额持续提升", source: "化妆品观察", date: "2026-08-15", score: 98, reason: "文章详细分析了2026年上半年化妆品行业整体走势，重点讨论国货品牌市场份额变化，与您的查询高度相关。" },
+            { id: 2, title: "新规解读：《化妆品监督管理条例》实施细则要点", source: "中国化妆品", date: "2026-08-12", score: 95, reason: "本文深入解读最新化妆品监管政策，涵盖备案流程、原料管理等关键内容，适合了解行业政策动态。" },
+            { id: 3, title: "抗衰老成分趋势报告：玻色因、胜肽、A醇市场分析", source: "美妆头条", date: "2026-08-10", score: 92, reason: "文章系统梳理了当前主流抗衰老成分的技术发展和市场表现，包含大量数据和趋势预测。" },
+            { id: 4, title: "618大促复盘：美妆品类销售数据与消费者洞察", source: "亿邦动力", date: "2026-08-08", score: 88, reason: "基于618大促数据，分析美妆品类销售表现和消费者行为变化，对了解市场动态有参考价值。" },
+            { id: 5, title: "纯净美妆(Clean Beauty)概念在中国的发展现状", source: "Vogue Business", date: "2026-08-05", score: 85, reason: "探讨纯净美妆概念在中国市场的接受度和发展趋势，涉及消费者认知和品牌策略。" }
+        ];
+
+        function setQuery(q) {
+            document.getElementById('searchInput').value = q;
+            doSearch();
+        }
+
+        function doSearch() {
+            var query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+
+            // 模拟搜索延迟
+            setTimeout(function() {
+                showResults(mockResults);
+            }, 800);
+        }
+
+        function showResults(results) {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('resultCount').textContent = results.length;
+
+            var html = '';
+            results.forEach(function(r) {
+                html += '<div class="result-card">' +
+                    '<div class="result-meta">' +
+                        '<span class="result-source">' + r.source + '</span>' +
+                        '<span class="result-date">' + r.date + '</span>' +
+                        '<span class="result-score">相关度 ' + r.score + '%</span>' +
+                    '</div>' +
+                    '<div class="result-title"><a href="#">' + r.title + '</a></div>' +
+                    '<div class="result-reason">' + r.reason + '</div>' +
+                    '<div class="result-actions">' +
+                        '<button class="btn-add" onclick="addToReport(' + r.id + ')">' +
+                            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>' +
+                            '加入选文报告' +
+                        '</button>' +
+                        '<a href="#" class="btn-view">查看原文 →</a>' +
+                    '</div>' +
+                '</div>';
+            });
+            document.getElementById('resultsList').innerHTML = html;
+        }
+
+        function addToReport(id) {
+            alert('已加入选文报告（文章ID: ' + id + '）\n\n此功能将在正式版中打通选文报告流程。');
+        }
+
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') doSearch();
+        });
+    </script>
+</body>
+</html>
