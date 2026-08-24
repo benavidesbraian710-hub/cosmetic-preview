@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>智能找文 - 化妆品文章智能检索</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
     <style>
         :root {
             --brand-red: #C41E3A;
@@ -514,7 +511,7 @@
             performSearch();
         }
 
-        async function performSearch() {
+        function performSearch() {
             const query = document.getElementById('searchInput').value.trim();
             if (!query) {
                 alert('请输入搜索内容');
@@ -579,14 +576,14 @@
                     </div>
                     <div class="match-reason">
                         <div class="match-reason-label">匹配理由</div>
-                        ${article.match_reason || '本文内容与您的搜索查询相关。'}
+                        ${article.match_reason}
                     </div>
                     <div class="article-meta">
                         <span>📱 ${article.wechat_name}</span>
                         <span>📅 ${article.publish_date}</span>
                     </div>
                     <div class="article-keywords">
-                        ${(article.keywords || '').split(',').slice(0, 5).map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+                        ${article.keywords.split(',').slice(0, 5).map(k => `<span class="keyword-tag">${k}</span>`).join('')}
                     </div>
                 </div>
             `).join('');
