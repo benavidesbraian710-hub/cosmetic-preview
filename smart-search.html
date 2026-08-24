@@ -502,41 +502,24 @@
     </aside>
 
     <script>
-        // 模拟文章数据（实际应从后端API获取）
-        const mockArticles = [
-            {
-                id: 1,
-                title: "2026年化妆品行业趋势报告：纯净美妆与科技护肤双轮驱动",
-                url: "https://mp.weixin.qq.com/s/xxx1",
-                wechat_name: "化妆品观察",
-                publish_date: "2026-08-20",
-                summary: "报告深入分析了2026年化妆品行业的两大核心趋势：纯净美妆（Clean Beauty）持续升温，消费者对成分安全性和透明度要求更高；科技护肤（Tech Beauty）加速渗透，AI皮肤检测、个性化定制等新技术应用广泛。",
-                keywords: "纯净美妆,科技护肤,行业趋势,成分安全,AI皮肤检测,个性化定制",
-                match_reason: "本文直接涵盖'近期化妆品行业最新动态'，提供2026年最新趋势分析，包括纯净美妆和科技护肤两大热点方向。"
-            },
-            {
-                id: 2,
-                title: "抗衰老成分新突破：玻色因与胜肽的协同效应研究",
-                url: "https://mp.weixin.qq.com/s/xxx2",
-                wechat_name: "原料合规观察",
-                publish_date: "2026-08-18",
-                summary: "最新研究表明，玻色因（Pro-Xylane）与胜肽类成分在抗衰老配方中具有显著协同效应。实验数据显示，两者复配使用可提升胶原蛋白生成效率达40%，同时降低刺激性。",
-                keywords: "抗衰老,玻色因,胜肽,协同效应,胶原蛋白,成分研究",
-                match_reason: "本文专注于抗衰老成分研究进展，详细介绍玻色因与胜肽的最新科研成果，符合'抗衰老成分研究进展'的搜索意图。"
-            },
-            {
-                id: 3,
-                title: "《化妆品监督管理条例》2026年修订要点解读",
-                url: "https://mp.weixin.qq.com/s/xxx3",
-                wechat_name: "妆合规",
-                publish_date: "2026-08-15",
-                summary: "2026年新版《化妆品监督管理条例》正式发布，重点修订内容包括：新原料备案流程优化、功效宣称评价标准细化、儿童化妆品监管加强、跨境电商合规要求明确等。",
-                keywords: "化妆品监管,新规政策,条例解读,原料备案,功效宣称,儿童化妆品",
-                match_reason: "本文解读2026年最新化妆品监管政策，涵盖新原料备案、功效宣称等关键合规要点，直接回应'化妆品新规政策解读'需求。"
-            }
-        ];
-
+        // 真实文章数据（从后端加载）
+        let allArticles = [];
         let selectedArticles = [];
+
+        // 页面加载时获取数据
+        async function loadArticles() {
+            try {
+                const response = await fetch('smart-search-data.json');
+                allArticles = await response.json();
+                console.log(`加载 ${allArticles.length} 篇文章`);
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                alert('数据加载失败，请刷新页面重试');
+            }
+        }
+
+        // 页面加载时初始化
+        loadArticles();
 
         function setSearch(text) {
             document.getElementById('searchInput').value = text;
@@ -550,28 +533,90 @@
                 return;
             }
 
+            if (allArticles.length === 0) {
+                alert('数据加载中，请稍候...');
+                return;
+            }
+
             // 显示加载状态
             document.getElementById('loading').style.display = 'block';
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('emptyState').style.display = 'none';
 
-            // 模拟API请求延迟
+            // 模拟API请求延迟（实际应调用后端）
             setTimeout(() => {
                 document.getElementById('loading').style.display = 'none';
                 
-                // 模拟搜索结果（实际应调用后端API）
-                const results = mockArticles.filter(article => {
-                    const searchText = (article.title + article.summary + article.keywords).toLowerCase();
-                    return searchText.includes(query.toLowerCase()) || 
-                           query.toLowerCase().split('').some(char => searchText.includes(char));
-                });
+                // 本地检索逻辑
+                const results = searchArticles(query);
 
                 if (results.length > 0) {
                     displayResults(results);
                 } else {
                     document.getElementById('emptyState').style.display = 'block';
                 }
-            }, 1500);
+            }, 800);
+        }
+
+        // 本地检索函数
+        function searchArticles(query) {
+            const queryLower = query.toLowerCase();
+            const queryTerms = queryLower.split(/[\s,，、]+/).filter(t => t.length > 0);
+            
+            // 计算每篇文章的相关度得分
+            const scored = allArticles.map(article => {
+                let score = 0;
+                let matchedTerms = [];
+                
+                const title = (article.title || '').toLowerCase();
+                const summary = (article.summary || '').toLowerCase();
+                const keywords = (article.keywords || '').toLowerCase();
+                const wechat = (article.wechat_name || '').toLowerCase();
+                
+                // 检查每个查询词
+                queryTerms.forEach(term => {
+                    // 标题匹配权重最高
+                    if (title.includes(term)) {
+                        score += 10;
+                        matchedTerms.push(term);
+                    }
+                    // 关键词匹配权重次之
+                    if (keywords.includes(term)) {
+                        score += 8;
+                        if (!matchedTerms.includes(term)) matchedTerms.push(term);
+                    }
+                    // 摘要匹配权重中等
+                    if (summary.includes(term)) {
+                        score += 5;
+                        if (!matchedTerms.includes(term)) matchedTerms.push(term);
+                    }
+                    // 公众号匹配权重较低
+                    if (wechat.includes(term)) {
+                        score += 3;
+                    }
+                });
+                
+                // 生成匹配理由
+                let matchReason = '';
+                if (matchedTerms.length > 0) {
+                    const uniqueTerms = [...new Set(matchedTerms)];
+                    matchReason = `本文涉及「${uniqueTerms.slice(0, 3).join('」「')}」相关内容，与您的搜索意图高度相关。`;
+                } else {
+                    matchReason = '本文内容与您的搜索查询相关。';
+                }
+                
+                return {
+                    ...article,
+                    score,
+                    match_reason: matchReason
+                };
+            });
+            
+            // 过滤掉得分为0的文章，按得分排序
+            return scored
+                .filter(a => a.score > 0)
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 50); // 最多返回50条
         }
 
         function displayResults(results) {
@@ -610,7 +655,7 @@
         }
 
         function toggleSelect(articleId) {
-            const article = mockArticles.find(a => a.id === articleId);
+            const article = allArticles.find(a => a.id === articleId);
             const index = selectedArticles.findIndex(a => a.id === articleId);
             
             if (index > -1) {
