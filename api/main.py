@@ -6,7 +6,7 @@ import sqlite3
 import re
 import json
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 app = FastAPI(title="化妆品文章智能检索API", version="3.0.0")
@@ -48,6 +48,32 @@ def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
+# ============ 时间过滤 ============
+
+def parse_time_filter(query: str) -> Optional[str]:
+    """从查询中提取时间限定词，返回对应的日期过滤条件（publish_date >= date）"""
+    today = datetime.now().date()
+    
+    time_patterns = [
+        (r'近一?周|最近一?周|本周|这周|这一周', 7),
+        (r'近两周|最近两周', 14),
+        (r'近一?个?月|最近一?个?月|本月|这个月', 30),
+        (r'近三[天日]|最近三[天日]|三[天日]内', 3),
+        (r'近五[天日]|最近五[天日]|五[天日]内', 5),
+        (r'近十[天日]|最近十[天日]|十[天日]内', 10),
+        (r'近半[个]?月|最近半[个]?月', 15),
+        (r'今年|本年', 365),
+        (r'近期|最近|最新|近来', 30),
+    ]
+    
+    for pattern, days in time_patterns:
+        if re.search(pattern, query):
+            cutoff = today - timedelta(days=days)
+            print(f"时间过滤: '{query}' 匹配 '{pattern}' → 近{days}天 → >= {cutoff}")
+            return cutoff.isoformat()
+    
+    return None
 
 # ============ 步骤1：LLM意图解析（锚点+修饰词） ============
 
@@ -134,8 +160,8 @@ def fallback_intent(query: str) -> Dict:
 
 # ============ 步骤2：锚点检索（AND逻辑） ============
 
-def anchor_search(intent: Dict, limit: int = 50) -> List[dict]:
-    """用意图锚点检索数据库——锚点必须命中，修饰词加权"""
+def anchor_search(intent: Dict, limit: int = 50, date_from: str = None) -> List[dict]:
+    """用意图锚点检索数据库——锚点必须命中，修饰词加权，支持时间过滤"""
     
     anchor = intent.get('anchor', '')
     anchor_synonyms = intent.get('anchor_synonyms', [])
@@ -151,28 +177,41 @@ def anchor_search(intent: Dict, limit: int = 50) -> List[dict]:
     cursor = conn.cursor()
     
     # 构建FTS5查询：锚点词组AND，修饰词可选
-    # 锚点部分：(term1 OR term2 OR ...)
     anchor_fts = ' OR '.join(f'"{t}"' for t in anchor_terms[:15])
     
-    # 如果有修饰词，用AND连接提升相关度
     if modifiers:
-        modifier_fts = ' OR '.join(f'"{t}"' for t in modifiers[:5])
-        fts_query = f'({anchor_fts}) AND ({modifier_fts})'
+        # 过滤掉时间相关的修饰词
+        time_words = ['近一周', '最近一周', '本周', '这周', '近一个月', '最近一个月', '本月', '近期', '最近', '最新', '今年']
+        non_time_modifiers = [m for m in modifiers if not any(tw in m for tw in time_words)]
+        if non_time_modifiers:
+            modifier_fts = ' OR '.join(f'"{t}"' for t in non_time_modifiers[:5])
+            fts_query = f'({anchor_fts}) AND ({modifier_fts})'
+        else:
+            fts_query = f'({anchor_fts})'
     else:
         fts_query = f'({anchor_fts})'
     
     print(f"FTS5锚点查询: {fts_query[:200]}")
     
+    # 时间过滤条件
+    date_condition = ""
+    params = [fts_query]
+    if date_from:
+        date_condition = "AND a.publish_date >= ?"
+        params.append(date_from)
+    params.append(limit)
+    
     try:
-        cursor.execute('''
+        cursor.execute(f'''
             SELECT a.id, a.title, a.url, a.wechat_name, a.publish_date, a.summary, a.keywords,
                    bm25(articles_fts) as fts_score
             FROM articles a
             JOIN articles_fts ON a.id = articles_fts.rowid
             WHERE articles_fts MATCH ?
+            {date_condition}
             ORDER BY fts_score
             LIMIT ?
-        ''', (fts_query, limit))
+        ''', params)
         
         results = cursor.fetchall()
         articles = [dict(row) for row in results]
@@ -180,15 +219,20 @@ def anchor_search(intent: Dict, limit: int = 50) -> List[dict]:
         # 如果AND查询结果太少，回退到仅锚点查询
         if len(articles) < 5 and modifiers:
             print(f"AND查询结果太少({len(articles)}), 回退到仅锚点查询")
-            cursor.execute('''
+            fallback_params = [f'({anchor_fts})']
+            if date_from:
+                fallback_params.append(date_from)
+            fallback_params.append(limit)
+            cursor.execute(f'''
                 SELECT a.id, a.title, a.url, a.wechat_name, a.publish_date, a.summary, a.keywords,
                        bm25(articles_fts) as fts_score
                 FROM articles a
                 JOIN articles_fts ON a.id = articles_fts.rowid
                 WHERE articles_fts MATCH ?
+                {date_condition}
                 ORDER BY fts_score
                 LIMIT ?
-            ''', (f'({anchor_fts})', limit))
+            ''', fallback_params)
             results = cursor.fetchall()
             articles = [dict(row) for row in results]
         
@@ -196,7 +240,6 @@ def anchor_search(intent: Dict, limit: int = 50) -> List[dict]:
         
     except sqlite3.OperationalError as e:
         print(f"FTS5查询失败: {e}, 回退到LIKE")
-        # FTS5失败，回退到LIKE——锚点必须匹配
         anchor_conditions = []
         params = []
         for term in anchor_terms[:10]:
@@ -204,11 +247,18 @@ def anchor_search(intent: Dict, limit: int = 50) -> List[dict]:
             params.extend([f'%{term}%', f'%{term}%', f'%{term}%'])
         
         anchor_where = ' OR '.join(anchor_conditions)
+        like_date = ""
+        if date_from:
+            like_date = "AND publish_date >= ?"
+            params.append(date_from)
+        params.append(limit)
+        
         cursor.execute(f'''
             SELECT id, title, url, wechat_name, publish_date, summary, keywords
             FROM articles WHERE ({anchor_where})
+            {like_date}
             ORDER BY publish_date DESC LIMIT ?
-        ''', params + [limit])
+        ''', params)
         
         results = cursor.fetchall()
         articles = []
@@ -368,9 +418,12 @@ async def search_articles(request: SearchRequest):
     intent = llm_parse_intent(request.query)
     print(f"意图锚点: {intent.get('anchor')}, 同义词: {len(intent.get('anchor_synonyms',[]))}, 修饰词: {intent.get('modifiers')}")
     
-    # 步骤2：锚点检索（AND逻辑）
-    articles = anchor_search(intent, limit=50)
-    print(f"锚点检索召回: {len(articles)} 篇")
+    # 步骤1.5：时间过滤解析
+    date_from = parse_time_filter(request.query)
+    
+    # 步骤2：锚点检索（AND逻辑+时间过滤）
+    articles = anchor_search(intent, limit=50, date_from=date_from)
+    print(f"锚点检索召回: {len(articles)} 篇" + (f"（>= {date_from}）" if date_from else ""))
     
     # 步骤3：LLM精排（意图锚定）
     if len(articles) > 0:
