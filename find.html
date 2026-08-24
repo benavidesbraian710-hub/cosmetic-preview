@@ -143,21 +143,16 @@
     <div class="footer">化妆品行业洞察平台 · 智能找文</div>
 
     <script>
-        // 示例数据
-        var mockResults = [
-            { id: 1, title: "2026年化妆品行业半年报：国货品牌市场份额持续提升", source: "化妆品观察", date: "2026-08-15", score: 98, reason: "文章详细分析了2026年上半年化妆品行业整体走势，重点讨论国货品牌市场份额变化，与您的查询高度相关。" },
-            { id: 2, title: "新规解读：《化妆品监督管理条例》实施细则要点", source: "中国化妆品", date: "2026-08-12", score: 95, reason: "本文深入解读最新化妆品监管政策，涵盖备案流程、原料管理等关键内容，适合了解行业政策动态。" },
-            { id: 3, title: "抗衰老成分趋势报告：玻色因、胜肽、A醇市场分析", source: "美妆头条", date: "2026-08-10", score: 92, reason: "文章系统梳理了当前主流抗衰老成分的技术发展和市场表现，包含大量数据和趋势预测。" },
-            { id: 4, title: "618大促复盘：美妆品类销售数据与消费者洞察", source: "亿邦动力", date: "2026-08-08", score: 88, reason: "基于618大促数据，分析美妆品类销售表现和消费者行为变化，对了解市场动态有参考价值。" },
-            { id: 5, title: "纯净美妆(Clean Beauty)概念在中国的发展现状", source: "Vogue Business", date: "2026-08-05", score: 85, reason: "探讨纯净美妆概念在中国市场的接受度和发展趋势，涉及消费者认知和品牌策略。" }
-        ];
+        // API配置
+        const API_BASE = 'https://oops-species-resource.ngrok-free.dev';
+        let selectedArticles = [];
 
         function setQuery(q) {
             document.getElementById('searchInput').value = q;
             doSearch();
         }
 
-        function doSearch() {
+        async function doSearch() {
             var query = document.getElementById('searchInput').value.trim();
             if (!query) return;
 
@@ -165,10 +160,37 @@
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('loadingState').style.display = 'block';
 
-            // 模拟搜索延迟
-            setTimeout(function() {
-                showResults(mockResults);
-            }, 800);
+            try {
+                const response = await fetch(`${API_BASE}/api/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        limit: 50,
+                        offset: 0
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API错误: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                document.getElementById('loadingState').style.display = 'none';
+                
+                if (data.articles && data.articles.length > 0) {
+                    showResults(data.articles);
+                } else {
+                    document.getElementById('emptyState').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('搜索失败:', error);
+                document.getElementById('loadingState').style.display = 'none';
+                alert('搜索失败，请检查网络连接或稍后重试');
+            }
         }
 
         function showResults(results) {
@@ -178,28 +200,44 @@
 
             var html = '';
             results.forEach(function(r) {
+                // 计算相关度分数（取绝对值并转换为百分比）
+                var score = Math.abs(r.score || 0);
+                var scorePercent = Math.min(99, Math.round(score * 20));
+                
                 html += '<div class="result-card">' +
                     '<div class="result-meta">' +
-                        '<span class="result-source">' + r.source + '</span>' +
-                        '<span class="result-date">' + r.date + '</span>' +
-                        '<span class="result-score">相关度 ' + r.score + '%</span>' +
+                        '<span class="result-source">' + (r.wechat_name || r.source) + '</span>' +
+                        '<span class="result-date">' + (r.publish_date || r.date) + '</span>' +
+                        '<span class="result-score">相关度 ' + scorePercent + '%</span>' +
                     '</div>' +
-                    '<div class="result-title"><a href="#">' + r.title + '</a></div>' +
-                    '<div class="result-reason">' + r.reason + '</div>' +
+                    '<div class="result-title"><a href="' + r.url + '" target="_blank">' + r.title + '</a></div>' +
+                    '<div class="result-reason">' + (r.match_reason || r.reason || '本文内容与您的搜索查询相关。') + '</div>' +
                     '<div class="result-actions">' +
-                        '<button class="btn-add" onclick="addToReport(' + r.id + ')">' +
+                        '<button class="btn-add" onclick="addToReport(' + r.id + ', this)" data-article=\'' + JSON.stringify(r).replace(/'/g, "\\'") + '\'>' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>' +
                             '加入选文报告' +
                         '</button>' +
-                        '<a href="#" class="btn-view">查看原文 →</a>' +
+                        '<a href="' + r.url + '" target="_blank" class="btn-view">查看原文 →</a>' +
                     '</div>' +
                 '</div>';
             });
             document.getElementById('resultsList').innerHTML = html;
         }
 
-        function addToReport(id) {
-            alert('已加入选文报告（文章ID: ' + id + '）\n\n此功能将在正式版中打通选文报告流程。');
+        function addToReport(id, btn) {
+            // 从按钮的data属性获取文章数据
+            const articleData = btn.getAttribute('data-article');
+            const article = JSON.parse(articleData);
+            
+            const index = selectedArticles.findIndex(a => a.id === id);
+            
+            if (index > -1) {
+                selectedArticles.splice(index, 1);
+                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>加入选文报告';
+            } else {
+                selectedArticles.push(article);
+                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>已加入';
+            }
         }
 
         // 回车搜索
