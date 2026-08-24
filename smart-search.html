@@ -502,39 +502,19 @@
     </aside>
 
     <script>
-        // 真实文章数据（从后端加载）
-        let allArticles = [];
+        // API配置
+        const API_BASE = 'http://localhost:8000';
         let selectedArticles = [];
-
-        // 页面加载时获取数据
-        async function loadArticles() {
-            try {
-                const response = await fetch('smart-search-data.json');
-                allArticles = await response.json();
-                console.log(`加载 ${allArticles.length} 篇文章`);
-            } catch (error) {
-                console.error('加载数据失败:', error);
-                alert('数据加载失败，请刷新页面重试');
-            }
-        }
-
-        // 页面加载时初始化
-        loadArticles();
 
         function setSearch(text) {
             document.getElementById('searchInput').value = text;
             performSearch();
         }
 
-        function performSearch() {
+        async function performSearch() {
             const query = document.getElementById('searchInput').value.trim();
             if (!query) {
                 alert('请输入搜索内容');
-                return;
-            }
-
-            if (allArticles.length === 0) {
-                alert('数据加载中，请稍候...');
                 return;
             }
 
@@ -543,80 +523,37 @@
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('emptyState').style.display = 'none';
 
-            // 模拟API请求延迟（实际应调用后端）
-            setTimeout(() => {
+            try {
+                const response = await fetch(`${API_BASE}/api/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        limit: 50,
+                        offset: 0
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API错误: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
                 document.getElementById('loading').style.display = 'none';
                 
-                // 本地检索逻辑
-                const results = searchArticles(query);
-
-                if (results.length > 0) {
-                    displayResults(results);
+                if (data.articles && data.articles.length > 0) {
+                    displayResults(data.articles);
                 } else {
                     document.getElementById('emptyState').style.display = 'block';
                 }
-            }, 800);
-        }
-
-        // 本地检索函数
-        function searchArticles(query) {
-            const queryLower = query.toLowerCase();
-            const queryTerms = queryLower.split(/[\s,，、]+/).filter(t => t.length > 0);
-            
-            // 计算每篇文章的相关度得分
-            const scored = allArticles.map(article => {
-                let score = 0;
-                let matchedTerms = [];
-                
-                const title = (article.title || '').toLowerCase();
-                const summary = (article.summary || '').toLowerCase();
-                const keywords = (article.keywords || '').toLowerCase();
-                const wechat = (article.wechat_name || '').toLowerCase();
-                
-                // 检查每个查询词
-                queryTerms.forEach(term => {
-                    // 标题匹配权重最高
-                    if (title.includes(term)) {
-                        score += 10;
-                        matchedTerms.push(term);
-                    }
-                    // 关键词匹配权重次之
-                    if (keywords.includes(term)) {
-                        score += 8;
-                        if (!matchedTerms.includes(term)) matchedTerms.push(term);
-                    }
-                    // 摘要匹配权重中等
-                    if (summary.includes(term)) {
-                        score += 5;
-                        if (!matchedTerms.includes(term)) matchedTerms.push(term);
-                    }
-                    // 公众号匹配权重较低
-                    if (wechat.includes(term)) {
-                        score += 3;
-                    }
-                });
-                
-                // 生成匹配理由
-                let matchReason = '';
-                if (matchedTerms.length > 0) {
-                    const uniqueTerms = [...new Set(matchedTerms)];
-                    matchReason = `本文涉及「${uniqueTerms.slice(0, 3).join('」「')}」相关内容，与您的搜索意图高度相关。`;
-                } else {
-                    matchReason = '本文内容与您的搜索查询相关。';
-                }
-                
-                return {
-                    ...article,
-                    score,
-                    match_reason: matchReason
-                };
-            });
-            
-            // 过滤掉得分为0的文章，按得分排序
-            return scored
-                .filter(a => a.score > 0)
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 50); // 最多返回50条
+            } catch (error) {
+                console.error('搜索失败:', error);
+                document.getElementById('loading').style.display = 'none';
+                alert('搜索失败，请确保后端API服务已启动（localhost:8000）');
+            }
         }
 
         function displayResults(results) {
@@ -631,22 +568,22 @@
                         </h3>
                         <button 
                             class="add-report-btn ${selectedArticles.find(a => a.id === article.id) ? 'added' : ''}" 
-                            onclick="toggleSelect(${article.id})"
-                            id="btn-${article.id}"
+                            onclick="toggleSelect(${article.id}, this)"
+                            data-article='${JSON.stringify(article).replace(/'/g, "\\'")}'
                         >
                             ${selectedArticles.find(a => a.id === article.id) ? '已加入' : '加入选文报告'}
                         </button>
                     </div>
                     <div class="match-reason">
                         <div class="match-reason-label">匹配理由</div>
-                        ${article.match_reason}
+                        ${article.match_reason || '本文内容与您的搜索查询相关。'}
                     </div>
                     <div class="article-meta">
                         <span>📱 ${article.wechat_name}</span>
                         <span>📅 ${article.publish_date}</span>
                     </div>
                     <div class="article-keywords">
-                        ${article.keywords.split(',').slice(0, 5).map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+                        ${(article.keywords || '').split(',').slice(0, 5).map(k => `<span class="keyword-tag">${k}</span>`).join('')}
                     </div>
                 </div>
             `).join('');
@@ -654,8 +591,11 @@
             document.getElementById('resultsList').innerHTML = listHtml;
         }
 
-        function toggleSelect(articleId) {
-            const article = allArticles.find(a => a.id === articleId);
+        function toggleSelect(articleId, btn) {
+            // 从按钮的data属性获取文章数据
+            const articleData = btn.getAttribute('data-article');
+            const article = JSON.parse(articleData);
+            
             const index = selectedArticles.findIndex(a => a.id === articleId);
             
             if (index > -1) {
@@ -667,12 +607,9 @@
             updateSelectedPanel();
             
             // 更新按钮状态
-            const btn = document.getElementById(`btn-${articleId}`);
-            if (btn) {
-                const isAdded = selectedArticles.find(a => a.id === articleId);
-                btn.textContent = isAdded ? '已加入' : '加入选文报告';
-                btn.className = `add-report-btn ${isAdded ? 'added' : ''}`;
-            }
+            const isAdded = selectedArticles.find(a => a.id === articleId);
+            btn.textContent = isAdded ? '已加入' : '加入选文报告';
+            btn.className = `add-report-btn ${isAdded ? 'added' : ''}`;
         }
 
         function updateSelectedPanel() {
