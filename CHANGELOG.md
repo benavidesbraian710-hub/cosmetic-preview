@@ -116,3 +116,26 @@
 - 核心内容：意图锚定检索架构、五功能卡片、双站部署、数据基线v75（1,262篇）、API设计、采集入库SOP
 - 存档位置：桌面《化妆品文章智能检索系统_设计文档_v3.0.md》
 - 同时创建项目变更日志CHANGELOG.md，后续每次改动追加记录
+
+## 2026-08-25 | 后端API独立部署阿里云ECS + 固定域名公网化
+- **后端架构升级**：FastAPI+SQLite 从 Mac mini 本地 → 阿里云轻量ECS（华东2上海，2核1G/30GB SSD/40元/月）
+- **固定域名**：阿里云DNS添加 `api.cosmetic-search.com` A记录 → ECS公网IP `8.133.238.76`
+- **HTTPS**：Let's Encrypt 证书自动签发，有效期至 2026-11-23（certbot cron 自动续期）
+- **数据库同步链路**：
+  - Mac mini端：每日凌晨4点 cron 跑 `sync_db_to_ecs.sh` → 复制 .db → git push
+  - ECS端：每小时 cron `git pull` → systemctl restart cosmetic-api
+- **前端API URL切换**：find.html/find-v2/find-v3/smart-search/smart-search-v2 全部从 trycloudflare/ngrok 改为 `https://api.cosmetic-search.com`
+- **部署包**：api-server/ 目录含 setup.sh（ECS一键部署脚本）、cosmetic-api.service、nginx-api.conf、main.py、requirements.txt
+- **状态**：✅ 已上线运行，https://api.cosmetic-search.com/api/health 返回 200
+
+## 2026-08-25 | export_data.py 版本号硬编码修复 + 首页显示异常修复
+- **Bug**：export_data.py 硬编码 `'version': 'v31'`，导致自动化导出脚本生成的数据无法被前端识别
+- **修复**：新增 `get_next_version()` 函数，扫描目录下 `data.vXX.json` 自动取最大编号+1，同时输出 `data.json` 和 `data.v{N+1}.json`
+- **首页1100+问题**：index.html/articles.html/report.html 三页面均加载 `data.v73.json`（1143篇旧版），手动改为 `data.v76.json?v=20260825`
+- **导出验证**：执行 export_data.py 生成 data.v76.json（1262篇/18公众号），确认版本号自动递增为 v76
+- **缓存规避**：URL 加 `?v=YYYYMMDD` 时间戳强制刷新，避免 CDN 缓存旧版
+
+## 2026-08-25 | 产品设计文档更新至v3.1
+- 在v3.0基础上新增：ECS部署架构、定时同步链路、固定域名公网化方案
+- 核心新增内容：第11章「后端生产环境与定时同步」、第12章「实时性策略」
+- 存档位置：桌面《化妆品文章智能检索系统_设计文档_v3.1.md》
