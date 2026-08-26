@@ -62,7 +62,7 @@
         </div>
         <table>
             <thead>
-                <tr><th>时间</th><th>类型</th><th>主题/来源</th><th>详情</th><th>联系人</th><th>邮箱</th></tr>
+                <tr><th>时间</th><th>类型</th><th>主题</th><th>需求详情</th><th>验收标准</th><th>联系人</th><th>邮箱</th></tr>
             </thead>
             <tbody id="reqBody"><tr><td colspan="6" class="empty">加载中...</td></tr></tbody>
         </table>
@@ -106,13 +106,24 @@
         };
         function render(list) {
             const body = document.getElementById('reqBody');
-            if (!list.length) { body.innerHTML = '<tr><td colspan="6" class="empty">暂无提交记录</td></tr>'; return; }
+            if (!list.length) { body.innerHTML = '<tr><td colspan="7" class="empty">暂无提交记录</td></tr>'; return; }
             body.innerHTML = list.map(r => {
                 const [label, cls] = TYPE_MAP[r.type] || [r.type || '-', 'tag-source'];
                 const tag = `<span class="tag ${cls}">${esc(label)}</span>`;
-                const subject = r.source_name || '';
+                const subject = r.title || r.source_name || r.topic || '';
                 const time = (r.created_at || '').replace('T', ' ').slice(0, 16);
-                return `<tr><td>${esc(time)}</td><td>${tag}</td><td>${esc(subject)}</td><td class="detail-cell">${esc(r.description || '')}</td><td>${esc(r.name || '')}</td><td>${esc(r.email || '')}</td></tr>`;
+                
+                // 构建需求详情
+                let detail = '';
+                if (r.report_points) detail += `<div><strong>报告要点:</strong> ${esc(r.report_points).substring(0, 100)}...</div>`;
+                if (r.source_content) detail += `<div><strong>来源:</strong> ${esc(r.source_content).substring(0, 80)}...</div>`;
+                if (r.use_case) detail += `<div><strong>用途:</strong> ${esc(r.use_case)}</div>`;
+                if (r.delivery_format) detail += `<div><strong>交付:</strong> ${esc(r.delivery_format)} / ${esc(r.page_length || '-')}</div>`;
+                
+                // 验收标准
+                const mustInclude = r.must_include ? esc(r.must_include).substring(0, 100) + '...' : '-';
+                
+                return `<tr><td>${esc(time)}</td><td>${tag}</td><td>${esc(subject)}</td><td class="detail-cell">${detail || esc(r.description || '')}</td><td class="detail-cell">${mustInclude}</td><td>${esc(r.name || '')}</td><td>${esc(r.email || '')}</td></tr>`;
             }).join('');
         }
         if (sessionStorage.getItem('admin_pwd')) loadRequests(false);

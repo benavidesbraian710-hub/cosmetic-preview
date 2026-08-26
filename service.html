@@ -31,6 +31,11 @@
         .field input:focus, .field textarea:focus { border-color: #C41E3A; box-shadow: 0 0 0 2px rgba(196,30,58,0.1); }
         .field textarea { resize: vertical; min-height: 110px; line-height: 1.7; }
         .field .hint { font-size: 12px; color: #999; margin-top: 6px; }
+        .section-title { font-family: 'Noto Serif SC', 'Songti SC', serif; font-size: 16px; color: #C41E3A; margin: 28px 0 16px; padding-top: 20px; border-top: 1px solid #f0f0f0; }
+        .section-title:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+        .radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+        .radio-item, .checkbox-item { display: flex; align-items: center; font-size: 14px; color: #2D2D2D; cursor: pointer; }
+        .radio-item input, .checkbox-item input { margin-right: 6px; accent-color: #C41E3A; }
         .row { display: flex; gap: 14px; flex-wrap: wrap; }
         .row .field { flex: 1; min-width: 200px; }
         .btn-submit { width: 100%; padding: 14px; background: #C41E3A; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; letter-spacing: 2px; transition: all .3s cubic-bezier(.2,.7,.3,1); }
@@ -71,13 +76,16 @@
             <h2>提交定制需求</h2>
             <div class="desc">填写您的报告需求，我们将在 24 小时内与您联系确认细节。</div>
             <form id="svcForm" novalidate>
+                <!-- 第一层：基础信息 -->
+                <div class="section-title">基础信息</div>
                 <div class="field">
-                    <label>报告需求描述 <span class="req">*</span></label>
-                    <textarea id="requirement" placeholder="请描述您想要什么样的报告（如竞品分析、趋势研判、政策解读等）"></textarea>
+                    <label>报告主题 <span class="req">*</span></label>
+                    <input type="text" id="title" placeholder="请输入报告主题或标题">
                 </div>
                 <div class="field">
-                    <label>依据内容说明 <span class="req">*</span></label>
-                    <textarea id="basis" placeholder="请说明希望我们根据哪些内容生成报告（可以是链接、资料描述等，不限于本站收录范围）"></textarea>
+                    <label>依据内容来源 <span class="req">*</span></label>
+                    <textarea id="sourceContent" placeholder="请提供报告依据的内容来源（文章链接/资料描述等），不限于本站收录范围"></textarea>
+                    <div class="hint">支持多个链接，每行一个；或详细描述资料内容</div>
                 </div>
                 <div class="row">
                     <div class="field">
@@ -89,6 +97,67 @@
                         <input type="email" id="contactEmail" placeholder="name@example.com">
                     </div>
                 </div>
+
+                <!-- 第二层：需求描述 -->
+                <div class="section-title">需求描述</div>
+                <div class="field">
+                    <label>我希望报告包含... <span class="req">*</span></label>
+                    <textarea id="reportPoints" placeholder="请分点描述您希望报告包含的内容（3-5点）
+如：1. 竞品A与竞品B的成分对比
+2. 近3个月价格趋势分析
+3. 消费者购买决策因素"></textarea>
+                    <div class="hint">建议3-5个要点，明确具体有助于提高交付质量</div>
+                </div>
+                <div class="field">
+                    <label>报告用于... <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="useCase" value="internal"> 内部汇报</label>
+                        <label class="radio-item"><input type="radio" name="useCase" value="client"> 客户提案</label>
+                        <label class="radio-item"><input type="radio" name="useCase" value="competitor"> 竞品分析</label>
+                        <label class="radio-item"><input type="radio" name="useCase" value="trend"> 趋势研究</label>
+                        <label class="radio-item"><input type="radio" name="useCase" value="other"> 其他</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>重点关注... <span class="opt">（可多选）</span></label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="ingredient"> 成分/原料</label>
+                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="brand"> 品牌/竞品</label>
+                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="channel"> 渠道/营销</label>
+                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="policy"> 政策/法规</label>
+                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="tech"> 技术/创新</label>
+                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="other"> 其他</label>
+                    </div>
+                </div>
+
+                <!-- 第三层：验收标准 -->
+                <div class="section-title">验收标准</div>
+                <div class="field">
+                    <label>交付形式 <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="bullet"> 要点清单</label>
+                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="paragraph"> 段落概述</label>
+                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="table"> 对比表格</label>
+                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="full"> 完整报告</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>篇幅期望 <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-item"><input type="radio" name="pageLength" value="1-2"> 1-2页</label>
+                        <label class="radio-item"><input type="radio" name="pageLength" value="3-5"> 3-5页</label>
+                        <label class="radio-item"><input type="radio" name="pageLength" value="5-10"> 5-10页</label>
+                        <label class="radio-item"><input type="radio" name="pageLength" value="unlimited"> 不限</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>必须包含 <span class="req">*</span></label>
+                    <textarea id="mustInclude" placeholder="请明确列出报告中必须包含的内容或分析维度（验收时将以此为准）
+如：竞品对比表格、数据支撑来源、趋势判断依据等"></textarea>
+                    <div class="hint">此内容为验收标准，请务必明确具体</div>
+                </div>
+
+                <!-- 补充信息 -->
                 <div class="field">
                     <label>微信 / 电话 <span class="opt">（选填）</span></label>
                     <input type="text" id="contactOther" placeholder="便于更快联系您">
@@ -121,14 +190,34 @@
             const msg = document.getElementById('msg');
             msg.className = 'msg'; msg.textContent = '';
 
-            const requirement = document.getElementById('requirement').value.trim();
-            const basis = document.getElementById('basis').value.trim();
+            // 第一层：基础信息
+            const title = document.getElementById('title').value.trim();
+            const sourceContent = document.getElementById('sourceContent').value.trim();
             const name = document.getElementById('contactName').value.trim();
             const email = document.getElementById('contactEmail').value.trim();
-            if (!requirement) { msg.className = 'msg err'; msg.textContent = '请填写报告需求描述。'; document.getElementById('requirement').focus(); return; }
-            if (!basis) { msg.className = 'msg err'; msg.textContent = '请填写依据内容说明。'; document.getElementById('basis').focus(); return; }
+            
+            if (!title) { msg.className = 'msg err'; msg.textContent = '请填写报告主题。'; document.getElementById('title').focus(); return; }
+            if (!sourceContent) { msg.className = 'msg err'; msg.textContent = '请填写依据内容来源。'; document.getElementById('sourceContent').focus(); return; }
             if (!name) { msg.className = 'msg err'; msg.textContent = '请填写您的称呼。'; document.getElementById('contactName').focus(); return; }
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.className = 'msg err'; msg.textContent = '请填写有效的联系邮箱。'; document.getElementById('contactEmail').focus(); return; }
+
+            // 第二层：需求描述
+            const reportPoints = document.getElementById('reportPoints').value.trim();
+            const useCase = document.querySelector('input[name="useCase"]:checked');
+            if (!reportPoints) { msg.className = 'msg err'; msg.textContent = '请填写"我希望报告包含..."内容。'; document.getElementById('reportPoints').focus(); return; }
+            if (!useCase) { msg.className = 'msg err'; msg.textContent = '请选择报告用途。'; return; }
+            
+            // 收集重点关注多选
+            const focusAreas = Array.from(document.querySelectorAll('input[name="focusArea"]:checked')).map(cb => cb.value);
+
+            // 第三层：验收标准
+            const deliveryFormat = document.querySelector('input[name="deliveryFormat"]:checked');
+            const pageLength = document.querySelector('input[name="pageLength"]:checked');
+            const mustInclude = document.getElementById('mustInclude').value.trim();
+            
+            if (!deliveryFormat) { msg.className = 'msg err'; msg.textContent = '请选择交付形式。'; return; }
+            if (!pageLength) { msg.className = 'msg err'; msg.textContent = '请选择篇幅期望。'; return; }
+            if (!mustInclude) { msg.className = 'msg err'; msg.textContent = '请填写"必须包含"内容（验收标准）。'; document.getElementById('mustInclude').focus(); return; }
 
             btn.disabled = true; btn.textContent = '提交中...';
 
@@ -138,9 +227,14 @@
 
             const payload = {
                 ref_code: refCode,
-                topic: requirement.slice(0, 200),
-                requirement: requirement,
-                basis: basis,
+                title: title,
+                source_content: sourceContent,
+                report_points: reportPoints,
+                use_case: useCase.value,
+                focus_areas: focusAreas.length > 0 ? JSON.stringify(focusAreas) : null,
+                delivery_format: deliveryFormat.value,
+                page_length: pageLength.value,
+                must_include: mustInclude,
                 name: name,
                 email: email,
                 contact: document.getElementById('contactOther').value.trim() || null,
