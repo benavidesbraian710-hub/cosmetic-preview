@@ -200,9 +200,9 @@
 
             var html = '';
             results.forEach(function(r) {
-                // 计算相关度分数（取绝对值并转换为百分比）
-                var score = Math.abs(r.score || 0);
-                var scorePercent = Math.min(99, Math.round(score * 20));
+                // 使用LLM返回的相关度分数（0-100）
+                var score = r.score || 0;
+                var scorePercent = Math.round(score);
                 
                 html += '<div class="result-card">' +
                     '<div class="result-meta">' +
