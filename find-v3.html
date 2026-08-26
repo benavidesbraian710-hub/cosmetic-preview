@@ -211,7 +211,7 @@
                         '<span class="result-score">相关度 ' + scorePercent + '%</span>' +
                     '</div>' +
                     '<div class="result-title"><a href="' + r.url + '" target="_blank">' + r.title + '</a></div>' +
-                    '<div class="result-reason">' + (r.match_reason || r.reason || '本文内容与您的搜索查询相关。') + '</div>' +
+                    '<div class="result-reason">' + (r.llm_reason || r.match_reason || r.reason || '本文内容与您的搜索查询相关。') + '</div>' +
                     '<div class="result-actions">' +
                         '<button class="btn-add" onclick="addToReport(' + r.id + ', this)" data-article=\'' + JSON.stringify(r).replace(/'/g, "\\'") + '\'>' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>' +
