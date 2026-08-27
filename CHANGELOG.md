@@ -211,6 +211,50 @@
   - 测试查询"化妆品新规政策"：67篇召回，79篇精选，全部有具体理由
 - **状态**：✅ 已修复，推送GitHub（commit 6da832a），ECS服务已重启
 
+## 2026-08-27 | 智能找文三项技术故障修复 — 进度条/按钮失效/时间过滤
+- **问题1：首页统计加载缓慢**
+  - 现象：首页三个统计数字（收录文章/行业公众号/覆盖天数）长时间显示红色横杠
+  - 根因：首页加载13MB的data.v77.json全量数据文件，国内网络环境下加载极慢
+  - 修复：统计数据抽离为独立stats.json（35KB，仅含stats和最新5篇文章），首页不再加载全量数据
+  - 部署：主仓commit 35f5ca9，预览仓commit 1b28281
+- **问题2：「加入选文报告」按钮点击无反应**
+  - 现象：搜索结果中点击「加入选文报告」按钮无任何反应
+  - 根因：按钮通过data-article属性传递JSON.stringify(r)，文章标题中的引号/斜杠等特殊字符导致HTML属性截断，JSON.parse失败
+  - 修复：改用全局articleMap存储文章数据，按钮只传文章ID，不再通过HTML属性传JSON
+  - 部署：主仓commit 6442fa5，预览仓commit 064a246
+- **问题3：搜索「一周内」时间限定未生效**
+  - 现象：搜索「一周内化妆品行业最新动态」返回91篇，未按时间过滤
+  - 根因：时间过滤正则缺少「X内」表达，「一周内」未匹配到7天模式，被「最新」兜底匹配到30天
+  - 修复：正则增加`一?周内|一?周以[来内]`等模式，覆盖「一周内/两周内/一个月内」等表达
+  - 验证：修复后「一周内」正确返回4篇（08-20至08-21），耗时53秒
+  - 部署：ECS服务已重启（scp上传main.py + systemctl restart cosmetic-api）
+- **问题4：进度条卡住断开**
+  - 现象：搜索时进度条走到95%后卡住不动，用户以为断开
+  - 根因：进度条预估50秒，但91篇召回时LLM精排实际耗时80秒
+  - 修复：预估时间从50秒调整为90秒，覆盖大召回量场景
+  - 部署：主仓commit 4d89d15，预览仓commit bf9cf5e
+
+## 2026-08-27 | 全站标题统一 + 搜索页面版本合并
+- **标题统一**：
+  - report.html / service.html / articles.html / submit.html 四个页面标题统一为「化妆品行业洞察平台 · 功能名」
+  - 字体统一为 Noto Serif SC 19px 粗体，topbar样式统一（68px高、毛玻璃背景、backdrop-filter: blur(8px)）
+  - articles.html标题改为单行显示（white-space: nowrap，font-size降至16px避免换行）
+- **版本合并**：
+  - find-v3.html内容覆盖find.html（唯一入口），删除find-v2/find-v3/smart-search/smart-search-v2四个冗余文件
+  - 首页智能找文入口指向find.html，所有人打开看到同一版本
+- **部署**：主仓commit 0aaf923 + 117b170，预览仓commit 858dc4c + 0211674
+
+## 2026-08-27 | API公网访问恢复 — hosts硬编码清理 + Clash Fake-IP直连
+- **问题**：前端搜索报「搜索失败」，API接口调用不通
+- **根因排查**：
+  1. /etc/hosts文件有硬编码`8.133.238.76 api.cosmetic-search.com`（之前排查时添加未删），绕过Cloudflare DNS直连旧IP，HTTPS被SNI阻断
+  2. Clash Verge代理工具Fake-IP模式将域名解析到198.18.0.x虚拟IP，流量被劫持到代理
+- **修复**：
+  1. 删除hosts文件硬编码（sudo sed -i ''）
+  2. Clash Verge全局Merge.yaml添加fake-ip-filter：`*.cosmetic-search.com`加入直连列表
+  3. 重启Clash Verge生效
+- **验证**：DNS解析恢复为Cloudflare CDN IP（104.21.93.7/172.67.201.219），API健康检查通过，搜索正常
+
 ## 2026-08-27 | API域名ICP备案拦截故障 — Cloudflare命名隧道终局方案
 - **问题现象**：
   - 15:30 Nick反馈后端API无法搜索
