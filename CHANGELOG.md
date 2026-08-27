@@ -211,6 +211,40 @@
   - 测试查询"化妆品新规政策"：67篇召回，79篇精选，全部有具体理由
 - **状态**：✅ 已修复，推送GitHub（commit 6da832a），ECS服务已重启
 
+## 2026-08-27 | API域名ICP备案拦截故障 — Cloudflare命名隧道终局方案
+- **问题现象**：
+  - 15:30 Nick反馈后端API无法搜索
+  - 前端所有搜索页面（find.html/find-v2/find-v3/smart-search/smart-search-v2）API地址指向已失效的Cloudflare临时隧道域名（essence-oils-contributing-paso.trycloudflare.com），DNS无法解析
+- **根因排查**：
+  1. 后端服务本身正常——IP直连测试搜索"抗衰老"返回7篇/52秒
+  2. `api.cosmetic-search.com` 域名DNS解析正确（8.133.238.76），但HTTPS连接在SSL握手阶段被重置（Connection reset by peer）——SNI阻断
+  3. `http://8.133.238.76:80` 被阿里云ICP备案拦截，返回"Non-compliance ICP Filing"页面
+  4. `https://8.133.238.76:443` 证书CN为api.cosmetic-search.com，浏览器报证书域名不匹配
+  5. Cloudflare临时隧道域名已过期失效
+- **真正根因**：`api.cosmetic-search.com` 域名未做ICP备案，被国内运营商检测到后实施SNI阻断（08-26还能用，08-27中午12:05突然被封）
+- **修复过程**（当日共改4次API地址）：
+  1. 12:05 改为IP直连HTTP → 被ICP备案拦截 ❌
+  2. 12:21 改为IP直连HTTPS → 证书域名不匹配 ❌
+  3. 12:34 改为Cloudflare临时隧道 → 通了但临时域名会过期 ⚠️
+  4. 15:36 临时隧道过期，搜索再次中断 ❌
+  5. 15:43 改为新临时隧道 → 临时恢复 ⚠️
+  6. **16:13 终局方案：Cloudflare命名隧道（Named Tunnel）**
+- **终局方案技术细节**：
+  - 创建命名隧道 `cosmetic-api`（ID: 3479ca5e-467a-4227-b1a9-cf621d51cda6）
+  - 隧道配置：`api.cosmetic-search.com` → `https://8.133.238.76:443`（noTLSVerify跳过自签名证书验证）
+  - DNS：删除旧A记录（api → 8.133.238.76），创建CNAME记录指向隧道
+  - 域名NS从阿里云（dns11/12.hichina.com）切换到Cloudflare（ajay/jewel.ns.cloudflare.com）
+  - 隧道以后台进程运行在Mac mini（PID 31389）
+- **验证结果**：
+  - 通过Cloudflare CDN IP强制解析测试：health接口返回正常 ✅
+  - 端到端搜索测试"抗衰老"：返回8篇，耗时45秒 ✅
+  - 前端API地址改回 `https://api.cosmetic-search.com`，固定域名不再变化 ✅
+- **部署**：主仓commit 995e1ec（feature/new-arch），预览仓commit 4b96a48（main）
+- **后续注意**：
+  - cloudflared进程（PID 31389）需在Mac mini上持续运行，重启后需手动启动
+  - 域名NS切换全球DNS传播需24-48小时，期间部分用户可能仍命中旧DNS缓存
+  - 主站 www.cosmetic-search.com 的DNS也已由Cloudflare接管（CNAME → GitHub Pages），不受备案影响
+
 ## 2026-08-27 | 定制化深度报告表单优化 — 勾选统一样式+其他选项展开+交付形式改为多选内容元素
 - **勾选样式统一**：radio和checkbox统一为方块样式（16px方块，品牌红勾选）
 - **需求描述-其他**：选择「其他」后显示输入框，必填具体用途
