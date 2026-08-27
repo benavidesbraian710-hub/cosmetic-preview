@@ -15,21 +15,40 @@
         .login-wrap button { width: 100%; padding: 10px; background: #C41E3A; color: #fff; border: none; border-radius: 6px; font-size: 15px; cursor: pointer; }
         .login-wrap button:hover { background: #A51830; }
         .login-wrap .err { color: #cf1322; font-size: 13px; margin-top: 12px; text-align: center; display: none; }
-        .admin-wrap { display: none; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; }
+        .admin-wrap { display: none; max-width: 1200px; margin: 40px auto; padding: 0 20px 60px; }
         .admin-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .admin-head h1 { font-size: 22px; color: #333; }
         .admin-head .ops { display: flex; gap: 10px; }
         .btn { padding: 8px 16px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; font-size: 14px; }
         .btn:hover { border-color: #C41E3A; color: #C41E3A; }
+
+        /* 标签页 */
+        .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid #EFEFEF; }
+        .tab { padding: 10px 20px; background: transparent; border: none; cursor: pointer; font-size: 14px; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; font-weight: 500; }
+        .tab:hover { color: #C41E3A; }
+        .tab.active { color: #C41E3A; border-bottom-color: #C41E3A; font-weight: 600; }
+        .tab .count { display: inline-block; margin-left: 6px; padding: 1px 8px; background: #FBE9EB; color: #C41E3A; border-radius: 10px; font-size: 12px; }
+        .tab.active .count { background: #C41E3A; color: #fff; }
+
         table { width: 100%; background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-collapse: collapse; overflow: hidden; }
         th { background: #fafafa; padding: 12px 14px; text-align: left; font-size: 13px; font-weight: 600; color: #333; border-bottom: 1px solid #e8e8e8; white-space: nowrap; }
         td { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; font-size: 13px; color: #555; vertical-align: top; }
         tr:last-child td { border-bottom: none; }
-        .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
-        .tag-source { background: #FBE9EB; color: #C41E3A; }
-        .tag-service { background: #fff7e6; color: #d48806; }
+        tr:hover td { background: #FAFAFA; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; white-space: nowrap; }
+        .tag-facts { background: #E6F4FF; color: #0958D9; }
+        .tag-summary { background: #F6FFED; color: #389E0D; }
+        .tag-custom { background: #FFF7E6; color: #D48806; }
+        .tag-len { background: #F0F0F0; color: #666; }
         .empty { text-align: center; color: #999; padding: 60px 0; font-size: 14px; }
-        .detail-cell { max-width: 320px; word-break: break-all; }
+        .detail-cell { max-width: 320px; word-break: break-word; line-height: 1.6; }
+        .detail-cell div { margin-bottom: 4px; }
+        .detail-cell div:last-child { margin-bottom: 0; }
+        .detail-cell strong { color: #333; }
+        .articles-list { font-size: 12px; color: #888; }
+        .articles-list a { color: #C41E3A; text-decoration: none; }
+        .articles-list a:hover { text-decoration: underline; }
+        .ref-code { font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: #888; }
 
         /* ── 视觉增强：红白品牌风 ── */
         body { background: #F8F8F8; }
@@ -56,77 +75,189 @@
         <div class="admin-head">
             <h1>用户需求列表</h1>
             <div class="ops">
-                <button class="btn" onclick="loadRequests()">刷新</button>
+                <button class="btn" onclick="loadAll()">刷新</button>
                 <button class="btn" onclick="logout()">退出</button>
             </div>
         </div>
-        <table>
-            <thead>
-                <tr><th>时间</th><th>类型</th><th>主题</th><th>需求详情</th><th>验收标准</th><th>联系人</th><th>邮箱</th></tr>
-            </thead>
-            <tbody id="reqBody"><tr><td colspan="6" class="empty">加载中...</td></tr></tbody>
-        </table>
+
+        <div class="tabs">
+            <button class="tab active" id="tabArticle" onclick="switchTab('article')">
+                智能选文报告 <span class="count" id="countArticle">0</span>
+            </button>
+            <button class="tab" id="tabService" onclick="switchTab('service')">
+                定制化深度报告 <span class="count" id="countService">0</span>
+            </button>
+        </div>
+
+        <!-- 智能选文报告 -->
+        <div id="panelArticle">
+            <table>
+                <thead>
+                    <tr><th>时间</th><th>需求单号</th><th>报告类型</th><th>篇幅</th><th>文章数</th><th>选中文献</th><th>具体要求</th><th>联系人</th><th>邮箱</th></tr>
+                </thead>
+                <tbody id="bodyArticle"><tr><td colspan="9" class="empty">加载中...</td></tr></tbody>
+            </table>
+        </div>
+
+        <!-- 定制化深度报告 -->
+        <div id="panelService" style="display:none">
+            <table>
+                <thead>
+                    <tr><th>时间</th><th>主题</th><th>需求详情</th><th>用途/关注</th><th>交付要求</th><th>验收标准</th><th>联系人</th><th>邮箱</th></tr>
+                </thead>
+                <tbody id="bodyService"><tr><td colspan="8" class="empty">加载中...</td></tr></tbody>
+            </table>
+        </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script>
+        let currentTab = 'article';
+        let articleData = [];
+        let serviceData = [];
+
         function doLogin() {
             const pwd = document.getElementById('pwd').value;
             if (!pwd) return;
             sessionStorage.setItem('admin_pwd', pwd);
-            loadRequests(true);
+            loadAll(true);
         }
         function logout() {
             sessionStorage.removeItem('admin_pwd');
             location.reload();
         }
-        async function loadRequests(isLogin) {
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('tabArticle').classList.toggle('active', tab === 'article');
+            document.getElementById('tabService').classList.toggle('active', tab === 'service');
+            document.getElementById('panelArticle').style.display = tab === 'article' ? 'block' : 'none';
+            document.getElementById('panelService').style.display = tab === 'service' ? 'block' : 'none';
+        }
+
+        async function loadAll(isLogin) {
             const pwd = sessionStorage.getItem('admin_pwd');
             if (!pwd) return;
             try {
                 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                const { data, error } = await sb.rpc('get_requests', { admin_pwd: pwd });
-                if (error) throw error;
+                // 并发查询两个表
+                const [articleRes, serviceRes] = await Promise.all([
+                    sb.rpc('get_article_reports', { admin_pwd: pwd }),
+                    sb.rpc('get_service_requests', { admin_pwd: pwd })
+                ]);
+                if (articleRes.error) throw articleRes.error;
+                if (serviceRes.error) throw serviceRes.error;
+
+                articleData = articleRes.data || [];
+                serviceData = serviceRes.data || [];
+
                 document.getElementById('loginWrap').style.display = 'none';
                 document.getElementById('adminWrap').style.display = 'block';
-                render(data || []);
+
+                document.getElementById('countArticle').textContent = articleData.length;
+                document.getElementById('countService').textContent = serviceData.length;
+
+                renderArticles(articleData);
+                renderServices(serviceData);
             } catch (e) {
+                console.error(e);
                 sessionStorage.removeItem('admin_pwd');
                 if (isLogin) document.getElementById('loginErr').style.display = 'block';
             }
         }
+
         function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
-        const TYPE_MAP = {
-            add_wechat:      ['收录公众号', 'tag-source'],
-            add_website:     ['收录网站',   'tag-source'],
-            other:           ['其他需求',   'tag-source'],
-            service_facts:   ['事实输出',   'tag-service'],
-            service_summary: ['综合概述',   'tag-service'],
-            service_custom:  ['定制报告',   'tag-service'],
-        };
-        function render(list) {
-            const body = document.getElementById('reqBody');
-            if (!list.length) { body.innerHTML = '<tr><td colspan="7" class="empty">暂无提交记录</td></tr>'; return; }
+        function fmtTime(t) { return (t || '').replace('T', ' ').slice(0, 16); }
+
+        const RTYPE_MAP = { facts: '事实输出', summary: '综合概述' };
+        const LENGTH_MAP = { brief: '简报1-2页', standard: '标准3-5页', deep: '深度5-10页' };
+        const USECASE_MAP = { internal: '内部汇报', client: '客户提案', competitor: '竞品分析', trend: '趋势研究', other: '其他' };
+        const FORMAT_MAP = { bullet: '要点清单', paragraph: '段落概述', table: '对比表格', full: '完整报告' };
+        const PAGELEN_MAP = { '1-2': '1-2页', '3-5': '3-5页', '5-10': '5-10页', 'unlimited': '不限' };
+
+        function renderArticles(list) {
+            const body = document.getElementById('bodyArticle');
+            if (!list.length) { body.innerHTML = '<tr><td colspan="9" class="empty">暂无提交记录</td></tr>'; return; }
             body.innerHTML = list.map(r => {
-                const [label, cls] = TYPE_MAP[r.type] || [r.type || '-', 'tag-source'];
-                const tag = `<span class="tag ${cls}">${esc(label)}</span>`;
-                const subject = r.title || r.source_name || r.topic || '';
-                const time = (r.created_at || '').replace('T', ' ').slice(0, 16);
-                
-                // 构建需求详情
-                let detail = '';
-                if (r.report_points) detail += `<div><strong>报告要点:</strong> ${esc(r.report_points).substring(0, 100)}...</div>`;
-                if (r.source_content) detail += `<div><strong>来源:</strong> ${esc(r.source_content).substring(0, 80)}...</div>`;
-                if (r.use_case) detail += `<div><strong>用途:</strong> ${esc(r.use_case)}</div>`;
-                if (r.delivery_format) detail += `<div><strong>交付:</strong> ${esc(r.delivery_format)} / ${esc(r.page_length || '-')}</div>`;
-                
-                // 验收标准
-                const mustInclude = r.must_include ? esc(r.must_include).substring(0, 100) + '...' : '-';
-                
-                return `<tr><td>${esc(time)}</td><td>${tag}</td><td>${esc(subject)}</td><td class="detail-cell">${detail || esc(r.description || '')}</td><td class="detail-cell">${mustInclude}</td><td>${esc(r.name || '')}</td><td>${esc(r.email || '')}</td></tr>`;
+                const rtype = RTYPE_MAP[r.report_type] || r.report_type || '-';
+                const rlen = LENGTH_MAP[r.length] || r.length || '-';
+
+                // 选中文章列表
+                let articlesHtml = '';
+                if (r.articles && Array.isArray(r.articles) && r.articles.length) {
+                    const items = r.articles.slice(0, 3).map(a => {
+                        const title = (a.title || a.id || '').toString().slice(0, 30);
+                        return `<div>· ${esc(title)}${(a.title||'').length > 30 ? '...' : ''}</div>`;
+                    }).join('');
+                    const more = r.articles.length > 3 ? `<div style="color:#bbb">... 共${r.articles.length}篇</div>` : '';
+                    articlesHtml = `<div class="articles-list">${items}${more}</div>`;
+                } else {
+                    articlesHtml = `<span style="color:#bbb">-</span>`;
+                }
+
+                const reqs = (r.requirements || '').length > 80 ? esc(r.requirements).substring(0, 80) + '...' : esc(r.requirements || '-');
+
+                return `<tr>
+                    <td>${esc(fmtTime(r.created_at))}</td>
+                    <td><span class="ref-code">${esc(r.ref_code || '-')}</span></td>
+                    <td><span class="tag tag-facts">${esc(rtype)}</span></td>
+                    <td><span class="tag tag-len">${esc(rlen)}</span></td>
+                    <td>${r.article_count || 0}</td>
+                    <td class="detail-cell">${articlesHtml}</td>
+                    <td class="detail-cell">${reqs}</td>
+                    <td>${esc(r.name || '')}</td>
+                    <td>${esc(r.email || '')}</td>
+                </tr>`;
             }).join('');
         }
-        if (sessionStorage.getItem('admin_pwd')) loadRequests(false);
+
+        function renderServices(list) {
+            const body = document.getElementById('bodyService');
+            if (!list.length) { body.innerHTML = '<tr><td colspan="8" class="empty">暂无提交记录</td></tr>'; return; }
+            body.innerHTML = list.map(r => {
+                const subject = r.title || r.source_name || r.topic || '-';
+
+                // 需求详情
+                let detail = '';
+                if (r.report_points) detail += `<div><strong>要点:</strong> ${esc(r.report_points).substring(0, 80)}${r.report_points.length > 80 ? '...' : ''}</div>`;
+                if (r.source_content) detail += `<div><strong>来源:</strong> ${esc(r.source_content).substring(0, 60)}${r.source_content.length > 60 ? '...' : ''}</div>`;
+                if (!detail && r.description) detail = esc(r.description).substring(0, 100);
+
+                // 用途/关注
+                let useInfo = '';
+                if (r.use_case) useInfo += `<span class="tag tag-summary">${esc(USECASE_MAP[r.use_case] || r.use_case)}</span>`;
+                if (r.focus_areas) {
+                    try {
+                        const areas = typeof r.focus_areas === 'string' ? JSON.parse(r.focus_areas) : r.focus_areas;
+                        if (Array.isArray(areas) && areas.length) {
+                            useInfo += `<div style="margin-top:4px;font-size:12px;color:#888">${esc(areas.join(' / '))}</div>`;
+                        }
+                    } catch (e) {}
+                }
+
+                // 交付要求
+                let delivery = '';
+                if (r.delivery_format) delivery += `<div>${esc(FORMAT_MAP[r.delivery_format] || r.delivery_format)}</div>`;
+                if (r.page_length) delivery += `<div style="font-size:12px;color:#888">${esc(PAGELEN_MAP[r.page_length] || r.page_length)}</div>`;
+
+                // 验收标准
+                const mustInclude = r.must_include ? esc(r.must_include).substring(0, 80) + (r.must_include.length > 80 ? '...' : '') : '-';
+
+                return `<tr>
+                    <td>${esc(fmtTime(r.created_at))}</td>
+                    <td><strong>${esc(subject)}</strong></td>
+                    <td class="detail-cell">${detail || '-'}</td>
+                    <td>${useInfo || '-'}</td>
+                    <td>${delivery || '-'}</td>
+                    <td class="detail-cell">${mustInclude}</td>
+                    <td>${esc(r.name || '')}</td>
+                    <td>${esc(r.email || '')}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        if (sessionStorage.getItem('admin_pwd')) loadAll(false);
     </script>
 </body>
 </html>
