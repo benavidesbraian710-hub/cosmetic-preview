@@ -236,15 +236,7 @@
             });
         }
 
-        // 兜底：5秒内数据未加载则显示静态数字，保证演示不空
-        setTimeout(function() {
-            if (document.getElementById('statArticles').textContent === '—') {
-                document.getElementById('statArticles').textContent = '1,324';
-                document.getElementById('statSources').textContent = '18';
-                document.getElementById('statDays').textContent = '74';
-            }
-        }, 5000);
-
+        // 数据加载：失败时显示"数据加载中"而非旧数据
         fetch('data.v77.json?v=20260827').then(function(r) { return r.json(); }).then(function(d) {
             var total = d.stats.total_articles, sources = d.stats.source_count;
             var days = Math.max(1, Math.round((new Date(d.stats.date_range.end) - new Date(d.stats.date_range.start)) / 86400000));
@@ -257,10 +249,11 @@
                 return '<div class="latest-item"><span class="src">' + String(a.source).replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</span><a href="' + a.url + '" target="_blank">' + t + '</a><span class="d">' + a.publish_date.slice(5) + '</span></div>';
             }).join('');
         }).catch(function() {
-            document.getElementById('statArticles').textContent = '1,324';
-            document.getElementById('statSources').textContent = '18';
-            document.getElementById('statDays').textContent = '74';
-            document.getElementById('latestList').innerHTML = '';
+            // 加载失败时显示加载中，不显示旧数据
+            document.getElementById('statArticles').textContent = '加载中...';
+            document.getElementById('statSources').textContent = '—';
+            document.getElementById('statDays').textContent = '—';
+            document.getElementById('latestList').innerHTML = '<div style="text-align:center;color:#999;padding:20px">数据加载中，请刷新重试</div>';
         });
         function countUp(id, target, thousands) {
             var el = document.getElementById(id); var t0 = performance.now(); var dur = 1700;

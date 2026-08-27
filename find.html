@@ -80,6 +80,9 @@
         .loading-spinner { width: 40px; height: 40px; border: 3px solid #F0F0F0; border-top-color: var(--accent); border-radius: 50%; margin: 0 auto 16px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading p { color: var(--muted); font-size: 14px; }
+        .progress-container { width: 280px; height: 4px; background: #F0F0F0; border-radius: 2px; margin: 20px auto 12px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
+        .progress-text { font-size: 13px; color: var(--muted); margin-top: 8px; }
 
         .footer { text-align: center; padding: 26px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); margin-top: auto; }
 
@@ -141,6 +144,10 @@
     <div class="loading" id="loadingState" style="display: none;">
         <div class="loading-spinner"></div>
         <p>AI 正在检索相关文章…</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p class="progress-text" id="progressText">正在解析查询意图...</p>
     </div>
 
     <div class="footer">化妆品行业洞察平台 · 智能找文</div>
@@ -162,6 +169,28 @@
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('loadingState').style.display = 'block';
+            
+            // 进度条模拟
+            var progressBar = document.getElementById('progressBar');
+            var progressText = document.getElementById('progressText');
+            var progress = 0;
+            var stages = [
+                { pct: 15, text: '正在解析查询意图...' },
+                { pct: 35, text: '正在检索相关文章...' },
+                { pct: 60, text: 'AI 正在精排筛选...' },
+                { pct: 85, text: '正在生成匹配理由...' },
+                { pct: 95, text: '即将完成...' }
+            ];
+            var stageIdx = 0;
+            
+            var progressInterval = setInterval(function() {
+                if (stageIdx < stages.length) {
+                    progress = stages[stageIdx].pct;
+                    progressBar.style.width = progress + '%';
+                    progressText.textContent = stages[stageIdx].text;
+                    stageIdx++;
+                }
+            }, 1200);
 
             try {
                 const response = await fetch(`${API_BASE}/api/search`, {
@@ -175,6 +204,10 @@
                         offset: 0
                     })
                 });
+
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                progressText.textContent = '完成';
 
                 if (!response.ok) {
                     throw new Error(`API错误: ${response.status}`);
