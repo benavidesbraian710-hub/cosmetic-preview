@@ -36,6 +36,20 @@
         .radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 12px 20px; }
         .radio-item, .checkbox-item { display: flex; align-items: center; font-size: 14px; color: #2D2D2D; cursor: pointer; }
         .radio-item input, .checkbox-item input { margin-right: 6px; accent-color: #C41E3A; }
+        /* 统一勾选样式为方块 */
+        .radio-item input[type=radio], .checkbox-item input[type=checkbox] {
+            appearance: none; -webkit-appearance: none;
+            width: 16px; height: 16px; border: 1.5px solid #d9d9d9; border-radius: 3px;
+            cursor: pointer; position: relative; transition: all .2s; flex-shrink: 0;
+        }
+        .radio-item input[type=radio]:checked, .checkbox-item input[type=checkbox]:checked {
+            background: #C41E3A; border-color: #C41E3A;
+        }
+        .radio-item input[type=radio]:checked::after, .checkbox-item input[type=checkbox]:checked::after {
+            content: ''; position: absolute; left: 4px; top: 1px;
+            width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
+        .radio-item input[type=radio]:hover, .checkbox-item input[type=checkbox]:hover { border-color: #C41E3A; }
         .row { display: flex; gap: 14px; flex-wrap: wrap; }
         .row .field { flex: 1; min-width: 200px; }
         .btn-submit { width: 100%; padding: 14px; background: #C41E3A; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; letter-spacing: 2px; transition: all .3s cubic-bezier(.2,.7,.3,1); }
@@ -107,6 +121,9 @@
                         <label class="radio-item"><input type="radio" name="useCase" value="trend"> 趋势研究</label>
                         <label class="radio-item"><input type="radio" name="useCase" value="other"> 其他</label>
                     </div>
+                    <div id="useCaseOtherWrap" style="display:none;margin-top:10px">
+                        <input type="text" id="useCaseOther" placeholder="请说明具体用途">
+                    </div>
                 </div>
                 <div class="field">
                     <label>重点关注... <span class="opt">（可多选）</span></label>
@@ -123,13 +140,20 @@
                 <!-- 第三层：验收标准 -->
                 <div class="section-title">验收标准</div>
                 <div class="field">
-                    <label>交付形式 <span class="req">*</span></label>
-                    <div class="radio-group">
-                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="bullet"> 要点清单</label>
-                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="paragraph"> 段落概述</label>
-                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="table"> 对比表格</label>
-                        <label class="radio-item"><input type="radio" name="deliveryFormat" value="full"> 完整报告</label>
+                    <label>报告需要包含哪些内容元素？ <span class="req">*</span> <span class="opt">（可多选）</span></label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="bullet"> 要点清单</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="table"> 对比表格</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="trend"> 趋势分析</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="case"> 案例列举</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="chart"> 数据图表</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="reference"> 参考文献</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="other"> 其他</label>
                     </div>
+                    <div id="deliveryOtherWrap" style="display:none;margin-top:10px">
+                        <input type="text" id="deliveryOther" placeholder="请说明需要包含的其他内容元素">
+                    </div>
+                    <div class="hint">勾选报告必须包含的内容元素，可多选组合</div>
                 </div>
                 <div class="field">
                     <label>篇幅期望 <span class="req">*</span></label>
@@ -138,6 +162,10 @@
                         <label class="radio-item"><input type="radio" name="pageLength" value="3-5"> 3-5页</label>
                         <label class="radio-item"><input type="radio" name="pageLength" value="5-10"> 5-10页</label>
                         <label class="radio-item"><input type="radio" name="pageLength" value="unlimited"> 不限</label>
+                        <label class="radio-item"><input type="radio" name="pageLength" value="custom"> 自定义</label>
+                    </div>
+                    <div id="pageLengthCustomWrap" style="display:none;margin-top:10px">
+                        <input type="text" id="pageLengthCustom" placeholder="请输入期望篇幅，如：8-12页">
                     </div>
                 </div>
                 <div class="field">
@@ -185,6 +213,26 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script>
+        // 其他选项展开/收起
+        document.querySelectorAll('input[name="useCase"]').forEach(r => {
+            r.addEventListener('change', () => {
+                document.getElementById('useCaseOtherWrap').style.display = 
+                    document.querySelector('input[name="useCase"]:checked')?.value === 'other' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('input[name="deliveryElement"]').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const hasOther = Array.from(document.querySelectorAll('input[name="deliveryElement"]:checked')).some(c => c.value === 'other');
+                document.getElementById('deliveryOtherWrap').style.display = hasOther ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('input[name="pageLength"]').forEach(r => {
+            r.addEventListener('change', () => {
+                document.getElementById('pageLengthCustomWrap').style.display = 
+                    document.querySelector('input[name="pageLength"]:checked')?.value === 'custom' ? 'block' : 'none';
+            });
+        });
+
         document.getElementById('svcForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -208,16 +256,42 @@
             if (!reportPoints) { msg.className = 'msg err'; msg.textContent = '请填写"我希望报告包含..."内容。'; document.getElementById('reportPoints').focus(); return; }
             if (!useCase) { msg.className = 'msg err'; msg.textContent = '请选择报告用途。'; return; }
             
+            // 用途为其他时，必须填写具体内容
+            let useCaseValue = useCase.value;
+            if (useCaseValue === 'other') {
+                const otherText = document.getElementById('useCaseOther').value.trim();
+                if (!otherText) { msg.className = 'msg err'; msg.textContent = '请填写具体用途。'; document.getElementById('useCaseOther').focus(); return; }
+                useCaseValue = 'other: ' + otherText;
+            }
+            
             // 收集重点关注多选
             const focusAreas = Array.from(document.querySelectorAll('input[name="focusArea"]:checked')).map(cb => cb.value);
 
             // 第三层：验收标准
-            const deliveryFormat = document.querySelector('input[name="deliveryFormat"]:checked');
+            const deliveryElements = Array.from(document.querySelectorAll('input[name="deliveryElement"]:checked')).map(cb => cb.value);
             const pageLength = document.querySelector('input[name="pageLength"]:checked');
             const mustInclude = document.getElementById('mustInclude').value.trim();
             
-            if (!deliveryFormat) { msg.className = 'msg err'; msg.textContent = '请选择交付形式。'; return; }
+            if (deliveryElements.length === 0) { msg.className = 'msg err'; msg.textContent = '请勾选报告需要包含的内容元素。'; return; }
+            
+            // 交付元素为其他时，必须填写具体内容
+            let deliveryValue = deliveryElements;
+            if (deliveryElements.includes('other')) {
+                const otherText = document.getElementById('deliveryOther').value.trim();
+                if (!otherText) { msg.className = 'msg err'; msg.textContent = '请填写需要包含的其他内容元素。'; document.getElementById('deliveryOther').focus(); return; }
+                deliveryValue = deliveryElements.filter(v => v !== 'other').concat(['other: ' + otherText]);
+            }
+            
             if (!pageLength) { msg.className = 'msg err'; msg.textContent = '请选择篇幅期望。'; return; }
+            
+            // 篇幅为自定义时，必须填写具体内容
+            let pageLengthValue = pageLength.value;
+            if (pageLengthValue === 'custom') {
+                const customText = document.getElementById('pageLengthCustom').value.trim();
+                if (!customText) { msg.className = 'msg err'; msg.textContent = '请填写期望篇幅。'; document.getElementById('pageLengthCustom').focus(); return; }
+                pageLengthValue = 'custom: ' + customText;
+            }
+            
             if (!mustInclude) { msg.className = 'msg err'; msg.textContent = '请填写"必须包含"内容（验收标准）。'; document.getElementById('mustInclude').focus(); return; }
 
             btn.disabled = true; btn.textContent = '提交中...';
@@ -231,10 +305,10 @@
                 title: title,
                 source_content: sourceContent,
                 report_points: reportPoints,
-                use_case: useCase.value,
+                use_case: useCaseValue,
                 focus_areas: focusAreas.length > 0 ? JSON.stringify(focusAreas) : null,
-                delivery_format: deliveryFormat.value,
-                page_length: pageLength.value,
+                delivery_format: JSON.stringify(deliveryValue),
+                page_length: pageLengthValue,
                 must_include: mustInclude,
                 name: name,
                 email: email,
@@ -261,6 +335,10 @@
             document.getElementById('successPanel').classList.remove('show');
             const form = document.getElementById('svcForm');
             form.reset();
+            // 隐藏所有其他输入框
+            document.getElementById('useCaseOtherWrap').style.display = 'none';
+            document.getElementById('deliveryOtherWrap').style.display = 'none';
+            document.getElementById('pageLengthCustomWrap').style.display = 'none';
             document.getElementById('formPanel').style.display = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
