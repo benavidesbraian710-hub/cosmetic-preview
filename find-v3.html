@@ -25,6 +25,8 @@
         .topbar .logo em { color: var(--accent); font-style: normal; }
         .topbar nav a { font-size: 14px; color: var(--muted); text-decoration: none; margin-left: 28px; transition: color .2s; }
         .topbar nav a:hover, .topbar nav a.active { color: var(--accent); }
+        .topbar .back-home { font-size: 14px; color: var(--accent); text-decoration: none; margin-left: 28px; padding: 6px 12px; border: 1px solid var(--accent); border-radius: 6px; transition: all .2s; }
+        .topbar .back-home:hover { background: var(--accent); color: #fff; }
 
         /* ── 搜索区 ── */
         .search-hero { background: linear-gradient(180deg, #FFFFFF 0%, #FDF9F9 100%); padding: 72px 48px 56px; text-align: center; border-bottom: 1px solid var(--border); }
@@ -100,6 +102,7 @@
             <a href="service.html">定制服务</a>
             <a href="find.html" class="active">智能找文</a>
         </nav>
+        <a href="index.html" class="back-home">← 返回首页</a>
     </div>
 
     <div class="search-hero">
@@ -200,9 +203,9 @@
 
             var html = '';
             results.forEach(function(r) {
-                // 使用LLM返回的相关度分数（0-100）
-                var score = r.score || 0;
-                var scorePercent = Math.round(score);
+                // 计算相关度分数（取绝对值并转换为百分比）
+                var score = Math.abs(r.score || 0);
+                var scorePercent = Math.min(99, Math.round(score * 20));
                 
                 html += '<div class="result-card">' +
                     '<div class="result-meta">' +
@@ -211,7 +214,7 @@
                         '<span class="result-score">相关度 ' + scorePercent + '%</span>' +
                     '</div>' +
                     '<div class="result-title"><a href="' + r.url + '" target="_blank">' + r.title + '</a></div>' +
-                    '<div class="result-reason">' + (r.llm_reason || r.match_reason || r.reason || '本文内容与您的搜索查询相关。') + '</div>' +
+                    '<div class="result-reason">' + (r.match_reason || r.reason || '本文内容与您的搜索查询相关。') + '</div>' +
                     '<div class="result-actions">' +
                         '<button class="btn-add" onclick="addToReport(' + r.id + ', this)" data-article=\'' + JSON.stringify(r).replace(/'/g, "\\'") + '\'>' +
                             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>' +
