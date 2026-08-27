@@ -69,6 +69,27 @@
         .btn-add svg { width: 14px; height: 14px; }
         .btn-view { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
         .btn-view:hover { border-color: var(--accent); color: var(--accent); }
+        
+        /* 导入选文报告按钮 */
+        .import-section { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; }
+        .btn-import { display: inline-block; padding: 14px 32px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all .3s var(--spring); letter-spacing: 0.5px; }
+        .btn-import:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,30,58,0.25); }
+        
+        /* 右侧浮动选文面板 */
+        .selected-panel { position: fixed; right: 24px; top: 100px; width: 300px; max-height: 60vh; background: #fff; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: none; flex-direction: column; z-index: 100; }
+        .selected-panel.show { display: flex; }
+        .selected-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .selected-header h3 { font-size: 15px; color: var(--ink); margin: 0; }
+        .selected-count { background: var(--accent); color: #fff; font-size: 12px; padding: 2px 8px; border-radius: 10px; }
+        .selected-list { flex: 1; overflow-y: auto; padding: 12px 16px; max-height: 40vh; }
+        .selected-item { padding: 10px 12px; margin-bottom: 8px; background: var(--panel); border-radius: 8px; font-size: 13px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+        .selected-item .title { flex: 1; color: var(--ink); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .selected-item .remove { color: #999; cursor: pointer; font-size: 18px; line-height: 1; padding: 0 4px; }
+        .selected-item .remove:hover { color: var(--accent); }
+        .selected-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+        .btn-import-panel { width: 100%; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .3s; }
+        .btn-import-panel:hover { background: var(--accent-hover); }
+        .btn-import-panel:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* ── 空状态 ── */
         .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
@@ -142,6 +163,20 @@
         </div>
     </div>
 
+    <!-- 右侧浮动选文面板 -->
+    <div class="selected-panel" id="selectedPanel">
+        <div class="selected-header">
+            <h3>已选文章</h3>
+            <span class="selected-count" id="selectedCount">0</span>
+        </div>
+        <div class="selected-list" id="selectedList"></div>
+        <div class="selected-footer">
+            <button class="btn-import-panel" id="btnImportPanel" onclick="importToReport()" disabled>
+                一键导入智能选文报告
+            </button>
+        </div>
+    </div>
+
     <div class="footer">化妆品行业洞察平台 · 智能找文</div>
 
     <script>
@@ -162,16 +197,16 @@
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('loadingState').style.display = 'block';
             
-            // 进度条动画（纯进度，无文字）
+            // 进度条匀速动画（预估50秒，匀速到95%，API返回后跳100%）
             var progressBar = document.getElementById('progressBar');
             var progress = 0;
+            var ESTIMATED_MS = 50000; // 预估总耗时50秒
+            var startTime = Date.now();
             var progressInterval = setInterval(function() {
-                if (progress < 90) {
-                    progress += Math.random() * 15;
-                    if (progress > 90) progress = 90;
-                    progressBar.style.width = progress + '%';
-                }
-            }, 800);
+                var elapsed = Date.now() - startTime;
+                progress = Math.min(95, (elapsed / ESTIMATED_MS) * 100);
+                progressBar.style.width = progress + '%';
+            }, 200);
 
             try {
                 const response = await fetch(`${API_BASE}/api/search`, {
@@ -216,9 +251,9 @@
 
             var html = '';
             results.forEach(function(r) {
-                // 计算相关度分数（取绝对值并转换为百分比）
-                var score = Math.abs(r.score || 0);
-                var scorePercent = Math.min(99, Math.round(score * 20));
+                // LLM返回的score是0-100，直接使用
+                var score = r.score || r.llm_score || 0;
+                var scorePercent = Math.min(100, Math.max(0, Math.round(score)));
                 
                 html += '<div class="result-card">' +
                     '<div class="result-meta">' +
@@ -254,6 +289,62 @@
                 selectedArticles.push(article);
                 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>已加入';
             }
+            
+            // 更新右侧面板
+            updateSelectedPanel();
+        }
+        
+        function updateSelectedPanel() {
+            var panel = document.getElementById('selectedPanel');
+            var list = document.getElementById('selectedList');
+            var count = document.getElementById('selectedCount');
+            var btn = document.getElementById('btnImportPanel');
+            
+            count.textContent = selectedArticles.length;
+            
+            if (selectedArticles.length > 0) {
+                panel.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = '一键导入智能选文报告 (' + selectedArticles.length + '篇)';
+                
+                list.innerHTML = selectedArticles.map(function(a, i) {
+                    return '<div class="selected-item">' +
+                        '<span class="title">' + (a.title || '无标题') + '</span>' +
+                        '<span class="remove" onclick="removeSelected(' + i + ')">×</span>' +
+                    '</div>';
+                }).join('');
+            } else {
+                panel.classList.remove('show');
+                btn.disabled = true;
+            }
+        }
+        
+        function removeSelected(index) {
+            selectedArticles.splice(index, 1);
+            updateSelectedPanel();
+            
+            // 同时更新结果列表中的按钮状态
+            var buttons = document.querySelectorAll('.btn-add');
+            buttons.forEach(function(btn) {
+                var data = btn.getAttribute('data-article');
+                if (data) {
+                    var article = JSON.parse(data);
+                    var stillSelected = selectedArticles.some(function(a) { return a.id === article.id; });
+                    if (!stillSelected) {
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>加入选文报告';
+                    }
+                }
+            });
+        }
+        
+        function importToReport() {
+            if (selectedArticles.length === 0) return;
+            
+            // 将选中文献存储到sessionStorage，供report.html读取
+            sessionStorage.setItem('selectedArticles', JSON.stringify(selectedArticles));
+            
+            // 跳转到智能选文报告页面
+            window.location.href = 'report.html';
         }
 
         // 回车搜索
