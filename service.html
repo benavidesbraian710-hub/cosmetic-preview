@@ -113,42 +113,19 @@
 3. 消费者购买决策因素"></textarea>
                     <div class="hint">建议3-5个要点，明确具体有助于提高交付质量</div>
                 </div>
-                <div class="field">
-                    <label>报告用于... <span class="req">*</span></label>
-                    <div class="radio-group">
-                        <label class="radio-item"><input type="radio" name="useCase" value="internal"> 内部汇报</label>
-                        <label class="radio-item"><input type="radio" name="useCase" value="client"> 客户提案</label>
-                        <label class="radio-item"><input type="radio" name="useCase" value="competitor"> 竞品分析</label>
-                        <label class="radio-item"><input type="radio" name="useCase" value="trend"> 趋势研究</label>
-                        <label class="radio-item"><input type="radio" name="useCase" value="other"> 其他</label>
-                    </div>
-                    <div id="useCaseOtherWrap" style="display:none;margin-top:10px">
-                        <input type="text" id="useCaseOther" placeholder="请说明具体用途">
-                    </div>
-                </div>
-                <div class="field">
-                    <label>重点关注... <span class="opt">（可多选）</span></label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="ingredient"> 成分/原料</label>
-                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="brand"> 品牌/竞品</label>
-                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="channel"> 渠道/营销</label>
-                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="policy"> 政策/法规</label>
-                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="tech"> 技术/创新</label>
-                        <label class="checkbox-item"><input type="checkbox" name="focusArea" value="other"> 其他</label>
-                    </div>
-                </div>
+
 
                 <!-- 第三层：验收标准 -->
                 <div class="section-title">验收标准</div>
                 <div class="field">
-                    <label>报告需要包含哪些内容元素？ <span class="req">*</span> <span class="opt">（可多选）</span></label>
+                    <label>报告需要包含哪些内容元素？ <span class="opt">（可多选）</span></label>
                     <div class="checkbox-group">
                         <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="bullet"> 要点清单</label>
                         <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="table"> 对比表格</label>
                         <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="trend"> 趋势分析</label>
                         <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="case"> 案例列举</label>
                         <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="chart"> 数据图表</label>
-                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="reference"> 参考文献</label>
+                        <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="reference"> 内容出处</label>
                         <label class="checkbox-item"><input type="checkbox" name="deliveryElement" value="other"> 其他</label>
                     </div>
                     <div id="deliveryOtherWrap" style="display:none;margin-top:10px">
@@ -215,12 +192,6 @@
     <script src="supabase-config.js"></script>
     <script>
         // 其他选项展开/收起
-        document.querySelectorAll('input[name="useCase"]').forEach(r => {
-            r.addEventListener('change', () => {
-                document.getElementById('useCaseOtherWrap').style.display = 
-                    document.querySelector('input[name="useCase"]:checked')?.value === 'other' ? 'block' : 'none';
-            });
-        });
         document.querySelectorAll('input[name="deliveryElement"]').forEach(cb => {
             cb.addEventListener('change', () => {
                 const hasOther = Array.from(document.querySelectorAll('input[name="deliveryElement"]:checked')).some(c => c.value === 'other');
@@ -253,27 +224,12 @@
 
             // 第二层：需求描述
             const reportPoints = document.getElementById('reportPoints').value.trim();
-            const useCase = document.querySelector('input[name="useCase"]:checked');
             if (!reportPoints) { msg.className = 'msg err'; msg.textContent = '请填写"我希望报告包含..."内容。'; document.getElementById('reportPoints').focus(); return; }
-            if (!useCase) { msg.className = 'msg err'; msg.textContent = '请选择报告用途。'; return; }
-            
-            // 用途为其他时，必须填写具体内容
-            let useCaseValue = useCase.value;
-            if (useCaseValue === 'other') {
-                const otherText = document.getElementById('useCaseOther').value.trim();
-                if (!otherText) { msg.className = 'msg err'; msg.textContent = '请填写具体用途。'; document.getElementById('useCaseOther').focus(); return; }
-                useCaseValue = 'other: ' + otherText;
-            }
-            
-            // 收集重点关注多选
-            const focusAreas = Array.from(document.querySelectorAll('input[name="focusArea"]:checked')).map(cb => cb.value);
 
             // 第三层：验收标准
             const deliveryElements = Array.from(document.querySelectorAll('input[name="deliveryElement"]:checked')).map(cb => cb.value);
             const pageLength = document.querySelector('input[name="pageLength"]:checked');
             const mustInclude = document.getElementById('mustInclude').value.trim();
-            
-            if (deliveryElements.length === 0) { msg.className = 'msg err'; msg.textContent = '请勾选报告需要包含的内容元素。'; return; }
             
             // 交付元素为其他时，必须填写具体内容
             let deliveryValue = deliveryElements;
@@ -306,8 +262,6 @@
                 title: title,
                 source_content: sourceContent,
                 report_points: reportPoints,
-                use_case: useCaseValue,
-                focus_areas: focusAreas.length > 0 ? JSON.stringify(focusAreas) : null,
                 delivery_format: JSON.stringify(deliveryValue),
                 page_length: pageLengthValue,
                 must_include: mustInclude,
@@ -337,7 +291,6 @@
             const form = document.getElementById('svcForm');
             form.reset();
             // 隐藏所有其他输入框
-            document.getElementById('useCaseOtherWrap').style.display = 'none';
             document.getElementById('deliveryOtherWrap').style.display = 'none';
             document.getElementById('pageLengthCustomWrap').style.display = 'none';
             document.getElementById('formPanel').style.display = '';
