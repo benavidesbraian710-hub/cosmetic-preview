@@ -201,7 +201,7 @@
             // 进度条匀速动画（预估50秒，匀速到95%，API返回后跳100%）
             var progressBar = document.getElementById('progressBar');
             var progress = 0;
-            var ESTIMATED_MS = 50000; // 预估总耗时50秒
+            var ESTIMATED_MS = 90000; // 预估总耗时90秒（召回多时LLM精排耗时较长）
             var startTime = Date.now();
             var progressInterval = setInterval(function() {
                 var elapsed = Date.now() - startTime;
