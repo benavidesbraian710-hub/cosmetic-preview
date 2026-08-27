@@ -237,14 +237,11 @@
         }
 
         // 数据加载：失败时显示"数据加载中"而非旧数据
-        fetch('data.v77.json?v=20260827').then(function(r) { return r.json(); }).then(function(d) {
+        fetch('stats.json?v=20260827').then(function(r) { return r.json(); }).then(function(d) {
             var total = d.stats.total_articles, sources = d.stats.source_count;
             var days = Math.max(1, Math.round((new Date(d.stats.date_range.end) - new Date(d.stats.date_range.start)) / 86400000));
             countUp('statArticles', total, true); countUp('statSources', sources, false); countUp('statDays', days, false);
-            var all = [];
-            Object.keys(d.articles).forEach(function(k) { d.articles[k].forEach(function(a) { all.push(a); }); });
-            all.sort(function(a, b) { return new Date(b.publish_date) - new Date(a.publish_date); });
-            document.getElementById('latestList').innerHTML = all.slice(0, 5).map(function(a) {
+            document.getElementById('latestList').innerHTML = d.latest.map(function(a) {
                 var t = String(a.title).replace(/&/g,'&amp;').replace(/</g,'&lt;');
                 return '<div class="latest-item"><span class="src">' + String(a.source).replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</span><a href="' + a.url + '" target="_blank">' + t + '</a><span class="d">' + a.publish_date.slice(5) + '</span></div>';
             }).join('');
