@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>化妆品行业洞察平台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
@@ -236,9 +239,9 @@
         // 兜底：5秒内数据未加载则显示静态数字，保证演示不空
         setTimeout(function() {
             if (document.getElementById('statArticles').textContent === '—') {
-                document.getElementById('statArticles').textContent = '1,143';
+                document.getElementById('statArticles').textContent = '1,324';
                 document.getElementById('statSources').textContent = '18';
-                document.getElementById('statDays').textContent = '64';
+                document.getElementById('statDays').textContent = '74';
             }
         }, 5000);
 
@@ -254,9 +257,9 @@
                 return '<div class="latest-item"><span class="src">' + String(a.source).replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</span><a href="' + a.url + '" target="_blank">' + t + '</a><span class="d">' + a.publish_date.slice(5) + '</span></div>';
             }).join('');
         }).catch(function() {
-            document.getElementById('statArticles').textContent = '1,100+';
+            document.getElementById('statArticles').textContent = '1,324';
             document.getElementById('statSources').textContent = '18';
-            document.getElementById('statDays').textContent = '60+';
+            document.getElementById('statDays').textContent = '74';
             document.getElementById('latestList').innerHTML = '';
         });
         function countUp(id, target, thousands) {
