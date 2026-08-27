@@ -69,6 +69,11 @@
         .btn-add svg { width: 14px; height: 14px; }
         .btn-view { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; font-size: 13px; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all .25s; }
         .btn-view:hover { border-color: var(--accent); color: var(--accent); }
+        
+        /* 导入选文报告按钮 */
+        .import-section { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; }
+        .btn-import { display: inline-block; padding: 14px 32px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; transition: all .3s var(--spring); letter-spacing: 0.5px; }
+        .btn-import:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,30,58,0.25); }
 
         /* ── 空状态 ── */
         .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); }
@@ -127,6 +132,13 @@
             <div class="results-sort">按相关度排序</div>
         </div>
         <div id="resultsList"></div>
+        
+        <!-- 导入智能选文报告按钮 -->
+        <div class="import-section" id="importSection" style="display: none;">
+            <button class="btn-import" id="importToReportBtn" onclick="importToReport()">
+                将选中文献导入智能选文报告 →
+            </button>
+        </div>
     </div>
 
     <div class="empty-state" id="emptyState">
@@ -254,6 +266,31 @@
                 selectedArticles.push(article);
                 btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>已加入';
             }
+            
+            // 更新底部导入按钮状态
+            updateImportButton();
+        }
+        
+        function updateImportButton() {
+            var importBtn = document.getElementById('importToReportBtn');
+            if (!importBtn) return;
+            
+            if (selectedArticles.length > 0) {
+                importBtn.style.display = 'block';
+                importBtn.innerHTML = '将 ' + selectedArticles.length + ' 篇选中文献导入智能选文报告 →';
+            } else {
+                importBtn.style.display = 'none';
+            }
+        }
+        
+        function importToReport() {
+            if (selectedArticles.length === 0) return;
+            
+            // 将选中文献存储到sessionStorage，供report.html读取
+            sessionStorage.setItem('selectedArticles', JSON.stringify(selectedArticles));
+            
+            // 跳转到智能选文报告页面
+            window.location.href = 'report.html';
         }
 
         // 回车搜索

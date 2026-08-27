@@ -273,6 +273,40 @@
         var selectedArticles = new Map(); // key: source_index -> {source, title, publish_date, url}
 
         function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        
+        // 页面加载时检查是否有从智能找文导入的选中文献
+        window.addEventListener('DOMContentLoaded', function() {
+            var imported = sessionStorage.getItem('selectedArticles');
+            if (imported) {
+                try {
+                    var articles = JSON.parse(imported);
+                    // 延迟到数据加载完成后导入
+                    var checkInterval = setInterval(function() {
+                        if (ARTICLE_DATA) {
+                            clearInterval(checkInterval);
+                            articles.forEach(function(a) {
+                                var key = a.wechat_name + '|' + a.url;
+                                selectedArticles.set(key, {
+                                    source: a.wechat_name,
+                                    title: a.title,
+                                    publish_date: a.publish_date,
+                                    url: a.url
+                                });
+                            });
+                            renderPicked();
+                            // 清除sessionStorage避免重复导入
+                            sessionStorage.removeItem('selectedArticles');
+                            // 显示提示
+                            setTimeout(function() {
+                                alert('已导入 ' + articles.length + ' 篇选中文献');
+                            }, 300);
+                        }
+                    }, 100);
+                } catch (e) {
+                    console.error('导入文献失败:', e);
+                }
+            }
+        });
 
         function loadData() {
             fetch('data.v77.json?t=' + Date.now(), { cache: 'no-store' })
