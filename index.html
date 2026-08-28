@@ -237,7 +237,7 @@
         }
 
         // 数据加载：失败时显示"数据加载中"而非旧数据
-        fetch('stats.json?v=20260827').then(function(r) { return r.json(); }).then(function(d) {
+        fetch('stats.json?v=20260828').then(function(r) { return r.json(); }).then(function(d) {
             var total = d.stats.total_articles, sources = d.stats.source_count;
             var days = Math.max(1, Math.round((new Date(d.stats.date_range.end) - new Date(d.stats.date_range.start)) / 86400000));
             countUp('statArticles', total, true); countUp('statSources', sources, false); countUp('statDays', days, false);
