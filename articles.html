@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="data-version" content="v79">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
     <title>文章检索 - 化妆品行业洞察平台</title>
     <style>
@@ -95,6 +99,21 @@
         .article-table tr:hover { background: #FDF6F7; }
         .toast { border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
     </style>
+
+    <script>
+    (function(){
+        var currentVersion = document.querySelector('meta[name="data-version"]');
+        if (currentVersion) {
+            var stored = localStorage.getItem('site_data_version');
+            if (stored && stored !== currentVersion.content) {
+                localStorage.setItem('site_data_version', currentVersion.content);
+                location.reload(true);
+            } else if (!stored) {
+                localStorage.setItem('site_data_version', currentVersion.content);
+            }
+        }
+    })();
+    </script>
 </head>
 <body>
     <div class="sidebar">
