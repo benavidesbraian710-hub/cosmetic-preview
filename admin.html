@@ -106,6 +106,9 @@
             <button class="tab" id="tabService" onclick="switchTab('service')">
                 定制化深度报告 <span class="count" id="countService">0</span>
             </button>
+            <button class="tab" id="tabRequest" onclick="switchTab('request')">
+                提交收录需求 <span class="count" id="countRequest">0</span>
+            </button>
         </div>
 
         <!-- 智能选文报告 -->
@@ -127,6 +130,16 @@
                 <tbody id="bodyService"><tr><td colspan="8" class="empty">加载中...</td></tr></tbody>
             </table>
         </div>
+
+        <!-- 提交收录需求 -->
+        <div id="panelRequest" style="display:none">
+            <table>
+                <thead>
+                    <tr><th>时间</th><th>需求类型</th><th>来源名称</th><th>来源链接</th><th>需求说明</th><th>联系人</th><th>邮箱</th></tr>
+                </thead>
+                <tbody id="bodyRequest"><tr><td colspan="7" class="empty">加载中...</td></tr></tbody>
+            </table>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -135,6 +148,7 @@
         let currentTab = 'article';
         let articleData = [];
         let serviceData = [];
+        let requestData = [];
 
         function doLogin() {
             const pwd = document.getElementById('pwd').value;
@@ -151,8 +165,10 @@
             currentTab = tab;
             document.getElementById('tabArticle').classList.toggle('active', tab === 'article');
             document.getElementById('tabService').classList.toggle('active', tab === 'service');
+            document.getElementById('tabRequest').classList.toggle('active', tab === 'request');
             document.getElementById('panelArticle').style.display = tab === 'article' ? 'block' : 'none';
             document.getElementById('panelService').style.display = tab === 'service' ? 'block' : 'none';
+            document.getElementById('panelRequest').style.display = tab === 'request' ? 'block' : 'none';
         }
 
         async function loadAll(isLogin) {
@@ -160,25 +176,30 @@
             if (!pwd) return;
             try {
                 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                // 并发查询两个表
-                const [articleRes, serviceRes] = await Promise.all([
+                // 并发查询三个表
+                const [articleRes, serviceRes, requestRes] = await Promise.all([
                     sb.rpc('get_article_reports', { admin_pwd: pwd }),
-                    sb.rpc('get_service_requests', { admin_pwd: pwd })
+                    sb.rpc('get_service_requests', { admin_pwd: pwd }),
+                    sb.rpc('get_requests', { admin_pwd: pwd })
                 ]);
                 if (articleRes.error) throw articleRes.error;
                 if (serviceRes.error) throw serviceRes.error;
+                if (requestRes.error) throw requestRes.error;
 
                 articleData = articleRes.data || [];
                 serviceData = serviceRes.data || [];
+                requestData = requestRes.data || [];
 
                 document.getElementById('loginWrap').style.display = 'none';
                 document.getElementById('adminWrap').style.display = 'block';
 
                 document.getElementById('countArticle').textContent = articleData.length;
                 document.getElementById('countService').textContent = serviceData.length;
+                document.getElementById('countRequest').textContent = requestData.length;
 
                 renderArticles(articleData);
                 renderServices(serviceData);
+                renderRequests(requestData);
             } catch (e) {
                 console.error(e);
                 sessionStorage.removeItem('admin_pwd');
@@ -194,6 +215,7 @@
         const USECASE_MAP = { internal: '内部汇报', client: '客户提案', competitor: '竞品分析', trend: '趋势研究', other: '其他' };
         const FORMAT_MAP = { bullet: '要点清单', paragraph: '段落概述', table: '对比表格', full: '完整报告' };
         const PAGELEN_MAP = { '1-2': '1-2页', '3-5': '3-5页', '5-10': '5-10页', 'unlimited': '不限' };
+        const REQTYPE_MAP = { add_wechat: '收录公众号', add_website: '收录网站', other: '其他需求' };
 
         function renderArticles(list) {
             const body = document.getElementById('bodyArticle');
@@ -270,6 +292,27 @@
                     <td>${useInfo || '-'}</td>
                     <td>${delivery || '-'}</td>
                     <td class="detail-cell">${mustInclude}</td>
+                    <td>${esc(r.name || '')}</td>
+                    <td>${esc(r.email || '')}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderRequests(list) {
+            const body = document.getElementById('bodyRequest');
+            if (!list.length) { body.innerHTML = '<tr><td colspan="7" class="empty">暂无提交记录</td></tr>'; return; }
+            body.innerHTML = list.map(r => {
+                const reqType = REQTYPE_MAP[r.type] || r.type || '-';
+                const sourceName = r.source_name || '-';
+                const sourceUrl = r.source_url ? `<a href="${esc(r.source_url)}" target="_blank" style="color:#C41E3A;text-decoration:none">${esc(r.source_url).substring(0, 40)}${r.source_url.length > 40 ? '...' : ''}</a>` : '-';
+                const description = r.description ? esc(r.description).substring(0, 100) + (r.description.length > 100 ? '...' : '') : '-';
+
+                return `<tr>
+                    <td>${esc(fmtTime(r.created_at))}</td>
+                    <td><span class="tag tag-custom">${esc(reqType)}</span></td>
+                    <td><strong>${esc(sourceName)}</strong></td>
+                    <td class="detail-cell">${sourceUrl}</td>
+                    <td class="detail-cell">${description}</td>
                     <td>${esc(r.name || '')}</td>
                     <td>${esc(r.email || '')}</td>
                 </tr>`;
