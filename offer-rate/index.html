@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+    <title>Offer Rate · 2026年8月</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; background: #F8F8F8; min-height: 100vh; }
+
+        .topbar { background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #EFEFEF; padding: 0 48px; height: 68px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+        .topbar .logo { font-family: 'Noto Serif SC', Georgia, 'Songti SC', 'SimSun', serif; font-size: 19px; font-weight: 700; letter-spacing: 1px; color: #2D2D2D; }
+        .topbar .logo span { color: #C41E3A; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px 20px 60px; }
+
+        /* 统计区 */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: #fff; border-radius: 14px; border: 1px solid #EFEFEF; padding: 24px; text-align: center; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03); position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #C41E3A, #F3A9B8); }
+        .stat-card .num { font-size: 32px; font-weight: 700; color: #C41E3A; font-family: 'Noto Serif SC', serif; }
+        .stat-card .label { font-size: 13px; color: #888; margin-top: 4px; }
+
+        /* 筛选区 */
+        .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+        .filter-bar select, .filter-bar input { padding: 8px 14px; border: 1px solid #d9d9d9; border-radius: 8px; font-size: 14px; outline: none; background: #fff; transition: border-color .3s; }
+        .filter-bar select:focus, .filter-bar input:focus { border-color: #C41E3A; box-shadow: 0 0 0 2px rgba(196,30,58,0.1); }
+        .filter-bar .count-info { font-size: 13px; color: #888; margin-left: auto; }
+
+        /* 渠道标签 */
+        .channel-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #EFEFEF; }
+        .ch-tab { padding: 10px 20px; background: transparent; border: none; cursor: pointer; font-size: 14px; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; font-weight: 500; }
+        .ch-tab:hover { color: #C41E3A; }
+        .ch-tab.active { color: #C41E3A; border-bottom-color: #C41E3A; font-weight: 600; }
+        .ch-tab .cnt { display: inline-block; margin-left: 6px; padding: 1px 8px; background: #FBE9EB; color: #C41E3A; border-radius: 10px; font-size: 12px; }
+        .ch-tab.active .cnt { background: #C41E3A; color: #fff; }
+
+        /* Offer卡片 */
+        .offer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .offer-card { background: #fff; border-radius: 14px; border: 1px solid #EFEFEF; overflow: hidden; box-shadow: 0 1px 1px rgba(0,0,0,0.04), 0 4px 6px rgba(34,42,53,0.03); transition: all .3s cubic-bezier(.2,.7,.3,1); }
+        .offer-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .offer-card .img-wrap { width: 100%; height: 220px; overflow: hidden; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .offer-card .img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .offer-card .body { padding: 16px 20px; }
+        .offer-card .brand-line { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .offer-card .brand { font-size: 15px; font-weight: 600; color: #2D2D2D; }
+        .offer-card .channel-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+        .channel-ec { background: #E6F4FF; color: #0958D9; }
+        .channel-counter { background: #F6FFED; color: #389E0D; }
+        .channel-sephora { background: #FFF7E6; color: #D48806; }
+        .offer-card .offer-name { font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .offer-card .rate-line { display: flex; align-items: baseline; gap: 6px; margin-bottom: 10px; }
+        .offer-card .rate-label { font-size: 12px; color: #888; }
+        .offer-card .rate-value { font-size: 24px; font-weight: 700; color: #C41E3A; font-family: 'Noto Serif SC', serif; }
+        .offer-card .meta { font-size: 12px; color: #999; line-height: 1.6; }
+        .offer-card .meta div { margin-bottom: 2px; }
+        .offer-card .record-id { font-family: 'SF Mono', Monaco, monospace; font-size: 11px; color: #bbb; margin-top: 8px; }
+
+        /* 详情弹窗 */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #fff; border-radius: 16px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 32px; position: relative; }
+        .modal .close-btn { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border: none; background: #f5f5f5; border-radius: 50%; cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center; }
+        .modal .close-btn:hover { background: #eee; }
+        .modal h2 { font-size: 20px; color: #2D2D2D; margin-bottom: 16px; font-family: 'Noto Serif SC', serif; }
+        .modal .detail-img { width: 100%; max-height: 400px; object-fit: contain; background: #f9f9f9; border-radius: 8px; margin-bottom: 16px; }
+        .modal .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal .detail-item { padding: 10px 14px; background: #F8F8F8; border-radius: 8px; }
+        .modal .detail-item .dt { font-size: 12px; color: #888; margin-bottom: 2px; }
+        .modal .detail-item .dd { font-size: 14px; color: #333; font-weight: 500; }
+        .modal .detail-item.full { grid-column: 1 / -1; }
+
+        .empty { text-align: center; color: #999; padding: 60px 0; font-size: 14px; grid-column: 1 / -1; }
+
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .offer-grid { grid-template-columns: 1fr; }
+            .topbar { padding: 0 20px; }
+            .modal .detail-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <div class="logo">化妆品行业<span>洞察平台</span> · Offer Rate</div>
+    </div>
+
+    <div class="container">
+        <!-- 统计卡片 -->
+        <div class="stats-row" id="statsRow"></div>
+
+        <!-- 渠道标签 -->
+        <div class="channel-tabs" id="channelTabs"></div>
+
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+            <select id="filterBrand"><option value="">全部品牌</option></select>
+            <select id="filterCategory"><option value="">全部品类</option></select>
+            <input type="text" id="filterSearch" placeholder="搜索Offer名称...">
+            <span class="count-info" id="countInfo"></span>
+        </div>
+
+        <!-- Offer列表 -->
+        <div class="offer-grid" id="offerGrid">
+            <div class="empty">加载中...</div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <button class="close-btn" onclick="closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let allOffers = [];
+        let currentChannel = '';
+        let statsData = {};
+
+        async function init() {
+            try {
+                const resp = await fetch('data.json');
+                const data = await resp.json();
+                allOffers = data.offers;
+                statsData = data;
+                renderStats(data);
+                renderChannelTabs(data);
+                renderFilters();
+                renderOffers();
+            } catch (e) {
+                document.getElementById('offerGrid').innerHTML = '<div class="empty">数据加载失败</div>';
+            }
+        }
+
+        function renderStats(data) {
+            const row = document.getElementById('statsRow');
+            const chEntries = Object.entries(data.channels);
+            row.innerHTML = `
+                <div class="stat-card"><div class="num">${data.total}</div><div class="label">有效Offer总数</div></div>
+                ${chEntries.map(([ch, cnt]) => `<div class="stat-card"><div class="num">${cnt}</div><div class="label">${ch}</div></div>`).join('')}
+            `;
+        }
+
+        function renderChannelTabs(data) {
+            const tabs = document.getElementById('channelTabs');
+            const chEntries = Object.entries(data.channels);
+            let html = `<button class="ch-tab active" data-ch="" onclick="switchChannel('')">全部 <span class="cnt">${data.total}</span></button>`;
+            chEntries.forEach(([ch, cnt]) => {
+                html += `<button class="ch-tab" data-ch="${ch}" onclick="switchChannel('${ch}')">${ch} <span class="cnt">${cnt}</span></button>`;
+            });
+            tabs.innerHTML = html;
+        }
+
+        function renderFilters() {
+            const brands = [...new Set(allOffers.map(o => o.brand).filter(Boolean))].sort();
+            const cats = [...new Set(allOffers.map(o => o.category).filter(Boolean))].sort();
+            const brandSel = document.getElementById('filterBrand');
+            const catSel = document.getElementById('filterCategory');
+            brands.forEach(b => { brandSel.innerHTML += `<option value="${esc(b)}">${esc(b)}</option>`; });
+            cats.forEach(c => { catSel.innerHTML += `<option value="${esc(c)}">${esc(c)}</option>`; });
+            brandSel.onchange = renderOffers;
+            catSel.onchange = renderOffers;
+            document.getElementById('filterSearch').oninput = debounce(renderOffers, 300);
+        }
+
+        function switchChannel(ch) {
+            currentChannel = ch;
+            document.querySelectorAll('.ch-tab').forEach(t => t.classList.toggle('active', t.dataset.ch === ch));
+            renderOffers();
+        }
+
+        function renderOffers() {
+            const brand = document.getElementById('filterBrand').value;
+            const cat = document.getElementById('filterCategory').value;
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+
+            let filtered = allOffers;
+            if (currentChannel) filtered = filtered.filter(o => o.channel === currentChannel);
+            if (brand) filtered = filtered.filter(o => o.brand === brand);
+            if (cat) filtered = filtered.filter(o => o.category === cat);
+            if (search) filtered = filtered.filter(o => o.offer_name.toLowerCase().includes(search) || o.brand.toLowerCase().includes(search));
+
+            document.getElementById('countInfo').textContent = `共 ${filtered.length} 条`;
+
+            const grid = document.getElementById('offerGrid');
+            if (!filtered.length) {
+                grid.innerHTML = '<div class="empty">暂无匹配数据</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map((o, i) => {
+                const chClass = o.channel === 'EC' ? 'channel-ec' : o.channel === '丝芙兰' ? 'channel-sephora' : 'channel-counter';
+                const imgSrc = o.offer_image ? o.offer_image : '';
+                return `<div class="offer-card" onclick="showDetail(${allOffers.indexOf(o)})">
+                    ${imgSrc ? `<div class="img-wrap"><img src="${imgSrc}" alt="${esc(o.offer_name)}" loading="lazy" onerror="this.parentElement.style.display='none'"></div>` : ''}
+                    <div class="body">
+                        <div class="brand-line">
+                            <span class="brand">${esc(o.brand)}</span>
+                            <span class="channel-tag ${chClass}">${esc(o.channel)}</span>
+                        </div>
+                        <div class="offer-name">${esc(o.offer_name)}</div>
+                        <div class="rate-line">
+                            <span class="rate-label">Offer Rate</span>
+                            <span class="rate-value">${esc(o.offer_rate)}</span>
+                        </div>
+                        <div class="meta">
+                            ${o.category ? `<div>品类: ${esc(o.category)}</div>` : ''}
+                            ${o.calc_method ? `<div>计算方法: ${esc(o.calc_method)}</div>` : ''}
+                        </div>
+                        <div class="record-id">${esc(o.record_id)}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function showDetail(idx) {
+            const o = allOffers[idx];
+            if (!o) return;
+            const chClass = o.channel === 'EC' ? 'channel-ec' : o.channel === '丝芙兰' ? 'channel-sephora' : 'channel-counter';
+            document.getElementById('modalContent').innerHTML = `
+                <h2>${esc(o.brand)} · ${esc(o.offer_name)}</h2>
+                ${o.offer_image ? `<img class="detail-img" src="${o.offer_image}" alt="Offer图片">` : ''}
+                <div class="detail-grid">
+                    <div class="detail-item"><div class="dt">Record ID</div><div class="dd">${esc(o.record_id)}</div></div>
+                    <div class="detail-item"><div class="dt">渠道</div><div class="dd"><span class="channel-tag ${chClass}">${esc(o.channel)}</span></div></div>
+                    <div class="detail-item"><div class="dt">品牌</div><div class="dd">${esc(o.brand)}</div></div>
+                    <div class="detail-item"><div class="dt">品类</div><div class="dd">${esc(o.category)}</div></div>
+                    <div class="detail-item"><div class="dt">Offer Rate</div><div class="dd" style="color:#C41E3A;font-size:20px;font-weight:700">${esc(o.offer_rate)}</div></div>
+                    <div class="detail-item"><div class="dt">计算方法</div><div class="dd">${esc(o.calc_method)}</div></div>
+                    <div class="detail-item full"><div class="dt">主品明细</div><div class="dd">${esc(o.main_products)}</div></div>
+                    <div class="detail-item full"><div class="dt">赠品明细</div><div class="dd">${esc(o.gift_items)}</div></div>
+                    <div class="detail-item"><div class="dt">主品价值</div><div class="dd">${esc(o.main_value)}</div></div>
+                    <div class="detail-item"><div class="dt">赠品价值</div><div class="dd">${esc(o.gift_value)}</div></div>
+                    <div class="detail-item full"><div class="dt">计算公式</div><div class="dd">${esc(o.formula)}</div></div>
+                    <div class="detail-item full"><div class="dt">价格证据</div><div class="dd">${esc(o.price_evidence)}</div></div>
+                    <div class="detail-item"><div class="dt">审计状态</div><div class="dd">${esc(o.audit_status)}</div></div>
+                    <div class="detail-item"><div class="dt">图片QA</div><div class="dd">${esc(o.image_qa)}</div></div>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function esc(s) { const d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+        function debounce(fn, ms) { let t; return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); }; }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        init();
+    </script>
+</body>
+</html>
