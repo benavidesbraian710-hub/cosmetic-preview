@@ -1,63 +1,63 @@
 {
   "stats": {
-    "total_articles": 2061,
+    "total_articles": 2118,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-09-24"
+      "end": "2026-09-27"
     },
-    "last_update": "2026-09-24T10:13:24.455611"
+    "last_update": "2026-09-27T20:34:41.335823"
   },
   "latest": [
     {
-      "id": 2667,
-      "title": "海信系纳真科技港股上市，卡位AI光通信全栈赛道！",
+      "id": 2725,
+      "title": "京东工业签约一汽奔腾；震坤行联合英特尔发布工业多模态大模型；国联股份算力收入兑现；卡奥斯二次递表港交所丨产业互联网周报",
+      "source": "亿邦动力",
+      "publish_date": "2026-09-27",
+      "url": "https://mp.weixin.qq.com/s/O0nROk8DAPxIlbux3KuNnw",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 2726,
+      "title": "亚马逊封禁Muse；TikTok Shop欧洲加码；速卖通智能经营Agent全面上线｜跨境电商周报",
+      "source": "亿邦动力",
+      "publish_date": "2026-09-27",
+      "url": "https://mp.weixin.qq.com/s/IpXQ3kUH-fHWJt490WxUpQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 2723,
+      "title": "迷你腮红狂飙402%，迷你眼影暴涨106%？美妆越小越赚钱？",
+      "source": "个护前沿",
+      "publish_date": "2026-09-27",
+      "url": "https://mp.weixin.qq.com/s/kyk_4nxMjiOHR2eT7Mluxw",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 2718,
+      "title": "中秋国庆旺季潮起，华住集团“轻舟”已过万重山",
       "source": "财经早餐",
-      "publish_date": "2026-09-24",
-      "url": "https://mp.weixin.qq.com/s/rIUQG6bJF69bf8C9N_gV1Q",
-      "summary": "近期，青岛资本市场历史上IPO规模最大的上市公司——纳真科技正式登陆港交所主板，成为青岛第90家上市公司，也是继电科思仪之后，两周时间内青岛新增的第二家上市公司，引发市场关注。值得注意的是，作为海信集团旗下第6家上市公司，纳真科技的上市不仅填补了海信在光通信领域的上市平台空白，也成为AI算力浪潮下，国内光芯片与光模块企业登陆资本市场的最新范本。从财务表现来看，纳真科技近年走出了一条先承压后爆发的增长曲线，与全球AI算力建设的周期高度契合。2023年至2025年，公司营业收入分别为42.39亿元、50.87亿元和83.55亿元，2025年同比增速达64.3%；2026年上半年营收53.93亿元，同比增长27.9%，延续了高增长态势。净利润端波动更为明显——2023年归母净利润2.16亿元，2024年受行业价格战与研发投入加大影响下滑至0.89亿元，2025年迅速反弹至8.73亿元，同比增幅近9倍；2026年上半年归母净利润6.56亿元，同比增长28.8%，盈利能力持续修复。毛利率的变化更能反映公司的产品结构升级逻辑。2023年公司整体毛利率为20.6%，2024年行业价格战下降至17.4",
+      "publish_date": "2026-09-27",
+      "url": "https://mp.weixin.qq.com/s/YI-pUrkK2IV2pe0QBkwP6g",
+      "summary": "",
       "keywords": [],
-      "cover": "https://mmbiz.qpic.cn/mmbiz_gif/b2YlTLuGbKBlZ6d0UDyO7HLG6nI5ZpIAWNEZxR4Kv6evCwUSPHDE7MslWp0NPhKJO4BeHqmpMzrXB7GkSm3aBg/640?wx_fmt=gif&amp;wxfrom=5&amp;wx_lazy=1&amp;tp=wxpic#imgIndex=5"
+      "cover": ""
     },
     {
-      "id": 2668,
-      "title": "蒙牛开了一张&quot;处方&quot;",
+      "id": 2719,
+      "title": "【财经早餐】2026.09.27星期日",
       "source": "财经早餐",
-      "publish_date": "2026-09-24",
-      "url": "https://mp.weixin.qq.com/s/VBJdcKPTMOuTu8wl_CgTOw",
-      "summary": "一条不太起眼的消息藏在9月的食品行业新闻里：蒙牛控股的特医品牌\"特一亿诺\"，两款自研的特殊医学用途配方食品拿到了市场监管总局的注册批文——\"宁敏瑞\"是第一款符合新国标的国产婴儿氨基酸配方食品，\"萱康安\"是第一款新国标下的谷氨酰胺组件配方食品。在此之前，中国的氨基酸特配粉市场只能依赖进口。对蒙牛来说，这两张注册证的价值，远不止两款新品上架那么简单——它押的是一门和卖牛奶逻辑完全相反的生意。蒙牛的账本，为什么需要新故事先看蒙牛这两年的报表。2024年，公司营收886.75亿元、同比下滑10.1%，归母净利润只有1.05亿元，暴跌97.8%——罪魁祸首是当年71亿元收购贝拉米留下的39.81亿元商誉减值，再加上现代牧业的拖累；2025年营收继续下滑7.3%至822.45亿元，是连续第二年收缩。作为收入支柱的液态奶占了八成以上，而乳品全渠道销售额在持续下滑，原奶过剩到企业每卖一吨工业乳粉要亏一两万元。靠营销驱动、靠并购扩张的老路，蒙牛已经走到了头。卢敏放时代的蒙牛靠\"狼性并购\"做大规模，雅士利、现代牧业、贝拉米、妙可蓝多一路买下来，结果是大额商誉减值一次次吞噬利润。高飞接任后调转船头，主动调节",
+      "publish_date": "2026-09-27",
+      "url": "https://mp.weixin.qq.com/s/1mDhNIQi5CzSYWDh6Nlhyw",
+      "summary": "",
       "keywords": [],
-      "cover": "https://mmbiz.qpic.cn/sz_mmbiz_png/mGm3FEb3WI6nvickXx2odcpwbI4iaDTpImd44QcOlIFAjtZF6vANLDkQb6GibhNMT3m5fjkpGXXAuBcK22b8vaHmfyAfWJbdxNQSpOwqILbWCc/640?wx_fmt=png&amp;from=appmsg#imgIndex=0"
-    },
-    {
-      "id": 2669,
-      "title": "【财经早餐】2026.09.24星期四",
-      "source": "财经早餐",
-      "publish_date": "2026-09-24",
-      "url": "https://mp.weixin.qq.com/s/j56EK9qHWHchCkUro_usyA",
-      "summary": "每日金曲：莫非定律乐团 - 追月亮的人► 央视新闻：9月23日下午，国家主席习近平乘专机离开北京，应美国总统特朗普邀请，对美国进行国事访问。► 第一财经：周三，A股房地产板块持续沸腾，多只个股涨停。市场兴奋的背后，除了地产股整体估值偏低之外，关于全国性贴息政策的传闻也成为重要助力。有市场消息称，将有全国性贴息政策落地，整体贴息力度最高可达100BP，推动首套房贷款利率降至2%的水平。对此传闻，多个券商房地产行业分析师认为全国性贴息政策落地的可能性不大。► 央行：为保持银行体系流动性充裕，9月24日，将以固定数量、利率招标、多重价位中标方式开展8000亿元MLF操作，期限为1年期。为更好匹配银行体系短期流动性需求，将在9月28日至10月8日开展隔夜逆回购操作，采用固定利率、数量招标，每日操作量不超过10000亿元。&nbsp;宏观经济&nbsp;1、商务部等三部门：联合发布《2025年度中国对外直接投资统计公报》。对外直接投资规模稳居全球前列，呈现多元化投资趋势。2025年，中国对外直接投资流量2135.8亿美元，同比增长11.1%，对外投资存量3.4万亿美元，连续9年保持全球前三，占全",
-      "keywords": [],
-      "cover": "https://mmbiz.qpic.cn/sz_mmbiz_png/mGm3FEb3WI6mfia7qETMiaKzheuWWvRNHtUbxNB5xhDrNWsuVByDdE52oFcicSQJohGuTEaVU1VwQoEwtDvETG5wRaL24LbeusZsc4a4aQFSbI/640?wx_fmt=png&amp;from=appmsg#imgIndex=0"
-    },
-    {
-      "id": 2665,
-      "title": "中秋安康！",
-      "source": "肤见未来实验室",
-      "publish_date": "2026-09-24",
-      "url": "https://mp.weixin.qq.com/s/NKeV35BvPSVmaFK5hWAPXQ",
-      "summary": "✨✿中秋喜乐，岁岁团圆✿✨🌕🌕桂影摇曳，万事圆满🏮🏮💛💛月色融融，福运常伴💛💛",
-      "keywords": [],
-      "cover": "https://mmbiz.qpic.cn/mmbiz_png/Qo5BdWYc88jhl2BwEtUBWTFgWOAMyt8CGCzYtfZOv1wuHVFv9VXPVBqBkaiaWpCPksjKKDiaLP1ZDIlX9mgibaVgG2nUwQhAcXwh8ibMVhlXqf4/640?wx_fmt=png&amp;from=appmsg"
-    },
-    {
-      "id": 2666,
-      "title": "为啥一到经期、孕期黄褐斑就疯长？新研究刷新认知",
-      "source": "肤见未来实验室",
-      "publish_date": "2026-09-24",
-      "url": "https://mp.weixin.qq.com/s/n0UMjc2aKtaXN54bMn9IwQ",
-      "summary": "很多长黄褐斑的女生都有同感：怀孕、吃避孕药、经期前后，色斑会明显加重。🔎研究背景：多见于育龄女性，雌激素可加重色斑。但雌激素并非直接作用黑色素细胞，个体反应差异大。临床发现黄褐斑皮损巨噬细胞大量浸润，推测雌激素或许通过免疫细胞间接促色素，但其具体通路尚不明确。🌡发病机制：雌激素不只是直接作用黑素细胞，它会改写皮肤巨噬细胞的极化状态，间接驱动色素沉着。文献解读研究目的探究雌激素能否通过M2巨噬细胞极化诱发黄褐斑，并解析相关分子机制。研究价值✅&nbsp;理论上：提出黄褐斑全新发病轴：雌激素‑M2巨噬细胞‑VEGF，补充激素斑的免疫发病机制，解释雌激素作用存在个体差异的原因|✅&nbsp;临床启示：不再只盯着黑色素细胞。M2巨噬细胞、VEGF有望成为黄褐斑新治疗靶点，为顽固性激素斑提供新的研发方向|研究方法1细胞实验雌激素借助STAT6通路诱导M2巨噬细胞极化；M2分泌VEGF，激活黑素细胞p38/ERK通路，促进黑色素生成；抑制VEGF，促黑效应随之减弱。2离体皮肤器官模型使用人离体皮肤组织培养，M2巨噬细胞上清会加深皮肤色素，阻断VEGF可逆转该现象，验证VEGF的促色素作用。3动物体",
-      "keywords": [],
-      "cover": "https://mmbiz.qpic.cn/mmbiz_png/Qo5BdWYc88ia1sATzzf66COoCkMViayQXwa0icqkrJ0tLlRqmkfw1wKNG87ZibFPNflVe08PEa8Z7N5ibpB3z2wlkv3jaQiazAG5NvNeFFJpMeTUw/640?wx_fmt=png&amp;from=appmsg"
+      "cover": ""
     }
   ]
 }
