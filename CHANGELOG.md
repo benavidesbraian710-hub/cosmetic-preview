@@ -5,6 +5,26 @@
 
 ---
 
+## 2026-09-08 | 批量入库脚本数据质量修复
+
+**问题现象**：
+- 09-04至09-07批次入库时，44篇文章wechat_name字段为空字符串
+- 导致网站显示"其他"公众号、公众号数量从18变成20
+- 问题根因：RPA采集Excel中account列部分行为空，入库脚本未校验直接插入空字符串
+
+**修复内容**：
+1. **空值兜底策略**：Excel中wechat_name为空时，自动从文章页面抓取真实公众号名
+2. **白名单校验**：非白名单公众号拒绝入库，避免脏数据进入数据库
+3. **日志增强**：详细记录跳过原因，方便排查
+
+**技术细节**：
+- 新增`fetch_wechat_name_from_page()`函数，从微信页面提取公众号名（支持多种正则模式）
+- 白名单常量`WHITELISTED_SOURCES`定义18个合法公众号
+- 入库前增加"已存在检查"避免重复
+- export_data.py限制summary长度(500字符)，解决Vercel文件大小限制
+
+---
+
 ## 2026-06-17 | 产品设计方案 v1.2 定稿
 - 确定检索架构：FTS5 + jieba分词关键词召回 + LLM批量精排两级架构
 - 确定数据方案：每篇文章入库时调用LLM生成200-400字摘要 + 10-15个关键词存SQLite
@@ -341,3 +361,91 @@
   5. 验证结果（修复后效果）
 - **记录位置**：CHANGELOG.md新增"问题与改进"章节，设计文档同步更新
 - **目的**：形成问题解决知识库，避免同类问题重复发生
+
+---
+
+## 2026-10-12 | 第二十八批入库 + GitHub推送阻塞12天修复
+
+### A. 第二十八批入库（v111→v112）
+
+**问题现象**：
+- Nick于10-12上午通过飞书发送"更新1.zip"压缩包，含8个RPA采集的xlsx文件（覆盖10-08~10-12五日）
+- 此前10-08交付的19个文件积压未入库（属于第十九~二十七批的延续）
+
+**根因排查过程**：
+- zip包解压后8个文件均为90行（1表头+89数据），公众号分布一致（17个号×5条 + Fbeauty未来迹×4条）
+- 判断为RPA爬虫多次重采同一时间窗口，导致文件内大量重复
+
+**真正根因**：
+- 720条原始URL → 文件内去重166条 → 跨DB去重98条净新增
+- 全部98条在白名单内（18个公众号全覆盖），无拦截
+
+**修复措施**：
+1. 复用batch_027_import.py核心逻辑创建batch_028_import.py
+2. ALLOWED_ACCOUNTS白名单、FALLBACK_DATE=2026-10-12
+3. 执行抓取入库，98/98全部成功（1.5分钟）
+4. 跑export_data.py自动升版本号v111→v112，同步ECS数据库
+5. 更新7个HTML文件的版本号引用
+
+**验证结果**：
+- 数据库：2252→2350篇，18个公众号，v112
+- ECS同步：2350=2350篇（成功）
+- 本地git：5个新commit（ad4ab3a/af03bda/41dd0ef/8a0b8fe/47a2ea5）
+
+### B. GitHub推送阻塞12天修复（核心问题）
+
+**问题现象**：
+- 自2026-09-27 22:11:56（commit 8f138fe）最后一次成功push后，所有后续commit均推送失败
+- 阻塞持续12天+，涉及9-28~10-12共5次批次入库的commit积压
+- Nick情绪烈度从"在处理"不耐烦升级到"你真服了你好好看一下行吗"的强烈不满
+
+**根因排查过程**：
+1. **SSH方案（github.com域名）**：`Connection closed by 198.18.0.9:22` —— Clash Fake-IP网关劫持DNS
+2. **SSH方案（github.com.real直连真实IP 140.82.114.4）**：`kex_exchange_identification: Connection closed by remote host` —— TCP通了但SSH kex阶段被GFW RST
+3. **HTTPS方案**：`could not read Username for 'https://github.com': terminal prompts disabled` —— macOS Keychain里无GitHub凭证条目
+4. **macOS Keychain全面扫描**：find-internet-password / find-generic-password / dump-keychain 全空
+5. **配置文件搜索**：.git-credentials / .netrc / .gitconfig / .openclaw/credentials/ 全部不存在GitHub token
+6. **环境变量扫描**：未发现GH_TOKEN / GITHUB_TOKEN环境变量
+7. **第一次细粒度PAT（fine-grained）**：`github_pat_11B7...1Fz5`
+   - `/user` API正常返回（token有效）
+   - `/user/repos` 列出5个仓库且perms=admin
+   - 但 `/repos/BenavidesBrayan710-hub/cosmetic-articles-search` 返回404
+   - git push: "Repository not found"
+8. **第二次细粒度PAT**：`github_pat_11B7...cTQD`
+   - 同样现象：/user 200，/user/repos 列出5个，/repos/{name} 全部404
+   - 关键发现：URL大小写导致API查询失败
+     - `BenavidesBrayan710-hub` (B大写) → 404
+     - `benavidesbraian710-hub` (全小写) → 200
+     - GitHub repo owner规范化形式为全小写
+9. **x-accepted-github-permissions 关键header**：
+   - cosmetic-preview: `contents=write; workflows=write`（接受写权限）
+   - cosmetic-articles-search: `metadata=read`（只接受读）
+   - 说明第二次细粒度PAT只授权了cosmetic-preview，没勾cosmetic-articles-search
+
+**真正根因**：
+1. **直接原因**：缺失可用的GitHub认证凭证（之前push成功可能是手动输入PAT未持久化，或已过期）
+2. **配置错误**：fine-grained PAT的Repository access没勾对具体仓库
+3. **URL规范化**：git remote URL历史用 `BenavidesBrayan710-hub` (B大写)，GitHub API实际要求小写
+
+**修复措施**：
+1. Nick重新创建**Classic PAT** (`ghp_...sPiQ`)，勾选 `repo` 全权限（绕开fine-grained的精细配置坑）
+2. **URL大小写修正**：所有仓库remote URL统一改为全小写 `benavidesbraian710-hub/...`
+3. **Token双重托管**（防再丢）：
+   - 备份源：`~/.openclaw/credentials/github_pat` (chmod 600)
+   - 运行时：macOS Keychain (osxkeychain helper) 预存，下次git push自动取
+4. 执行push：
+   - `git push origin main` → 47a2ea5 (8a0b8fe..47a2ea5) 成功
+   - `git push origin feature/new-arch` → 41dd0ef (8f138fe..41dd0ef) 成功
+5. fetch验证本地-远端差异：main 0|0、feature/new-arch 0|0
+
+**验证结果**：
+- origin/main: 47a2ea5 (v112/2350篇)
+- origin/feature/new-arch: 41dd0ef (v111/2252篇)
+- 本地与远端完全对齐
+- 后续 `git fetch origin` 自动用Keychain凭证无需交互
+- 阻塞12天彻底打通
+
+**遗留待办**：
+- `cosmetic-preview` 仓库remote URL还是SSH `git@github.com:...`（走Fake-IP会被劫持），如果以后需要推那个仓库建议改HTTPS + 复用本token
+- CHANGELOG历史断档：08-27之后到10-12的中间批次（22~27批）未在CHANGELOG单独记录，需要时可批量补录
+

@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2118,
+    "total_articles": 2350,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-09-27"
+      "end": "2026-10-12"
     },
-    "last_update": "2026-09-27T20:34:41.335823"
+    "last_update": "2026-10-12T10:16:42.391977"
   },
   "latest": [
     {
-      "id": 2725,
-      "title": "京东工业签约一汽奔腾；震坤行联合英特尔发布工业多模态大模型；国联股份算力收入兑现；卡奥斯二次递表港交所丨产业互联网周报",
-      "source": "亿邦动力",
-      "publish_date": "2026-09-27",
-      "url": "https://mp.weixin.qq.com/s/O0nROk8DAPxIlbux3KuNnw",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 2726,
-      "title": "亚马逊封禁Muse；TikTok Shop欧洲加码；速卖通智能经营Agent全面上线｜跨境电商周报",
-      "source": "亿邦动力",
-      "publish_date": "2026-09-27",
-      "url": "https://mp.weixin.qq.com/s/IpXQ3kUH-fHWJt490WxUpQ",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 2723,
-      "title": "迷你腮红狂飙402%，迷你眼影暴涨106%？美妆越小越赚钱？",
-      "source": "个护前沿",
-      "publish_date": "2026-09-27",
-      "url": "https://mp.weixin.qq.com/s/kyk_4nxMjiOHR2eT7Mluxw",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 2718,
-      "title": "中秋国庆旺季潮起，华住集团“轻舟”已过万重山",
+      "id": 2949,
+      "title": "【财经早餐】2026.10.12星期一",
       "source": "财经早餐",
-      "publish_date": "2026-09-27",
-      "url": "https://mp.weixin.qq.com/s/YI-pUrkK2IV2pe0QBkwP6g",
+      "publish_date": "2026-10-12",
+      "url": "https://mp.weixin.qq.com/s/RVkIEGBkGK171Ruuj1DQDA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 2719,
-      "title": "【财经早餐】2026.09.27星期日",
+      "id": 2950,
+      "title": "巨头混战的年份里，叮咚把生意做成了利润",
       "source": "财经早餐",
-      "publish_date": "2026-09-27",
-      "url": "https://mp.weixin.qq.com/s/1mDhNIQi5CzSYWDh6Nlhyw",
+      "publish_date": "2026-10-12",
+      "url": "https://mp.weixin.qq.com/s/42HHmXvCSle3jLqNIzEJOQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 2951,
+      "title": "一只大闸蟹不到10元，为何卖出“地板价”？",
+      "source": "财经早餐",
+      "publish_date": "2026-10-12",
+      "url": "https://mp.weixin.qq.com/s/q7J_1xO4DOtKumgPVycI2g",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 2938,
+      "title": "美国收紧低价货物清关规则；TikTok Shop上线AI购物助手；速卖通测试会员计划｜跨境电商周报",
+      "source": "亿邦动力",
+      "publish_date": "2026-10-11",
+      "url": "https://mp.weixin.qq.com/s/nzgJNy7W-nQVmacIkp4ckw",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 2945,
+      "title": "【财经早餐】2026.10.11星期日",
+      "source": "财经早餐",
+      "publish_date": "2026-10-11",
+      "url": "https://mp.weixin.qq.com/s/TirEuh3usqGM_LEckZMlMg",
       "summary": "",
       "keywords": [],
       "cover": ""
