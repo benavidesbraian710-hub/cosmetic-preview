@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2350,
+    "total_articles": 2449,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-12"
+      "end": "2026-10-16"
     },
-    "last_update": "2026-10-12T10:16:42.391977"
+    "last_update": "2026-10-16T13:32:03.588643"
   },
   "latest": [
     {
-      "id": 2949,
-      "title": "【财经早餐】2026.10.12星期一",
+      "id": 3051,
+      "title": "景旺电子，一个季度赚超半年！",
       "source": "财经早餐",
-      "publish_date": "2026-10-12",
-      "url": "https://mp.weixin.qq.com/s/RVkIEGBkGK171Ruuj1DQDA",
+      "publish_date": "2026-10-16",
+      "url": "https://mp.weixin.qq.com/s/MZp7vZobBHaf25FDo5s5gQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 2950,
-      "title": "巨头混战的年份里，叮咚把生意做成了利润",
+      "id": 3052,
+      "title": "【财经早餐】2026.10.16星期五",
       "source": "财经早餐",
-      "publish_date": "2026-10-12",
-      "url": "https://mp.weixin.qq.com/s/42HHmXvCSle3jLqNIzEJOQ",
+      "publish_date": "2026-10-16",
+      "url": "https://mp.weixin.qq.com/s/H_BTen0FxAoBY_yTv_ekJg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 2951,
-      "title": "一只大闸蟹不到10元，为何卖出“地板价”？",
-      "source": "财经早餐",
-      "publish_date": "2026-10-12",
-      "url": "https://mp.weixin.qq.com/s/q7J_1xO4DOtKumgPVycI2g",
+      "id": 3015,
+      "title": "全球动态｜香奈儿全球精品部总裁辞去公司董事会职务；McQueen 创意总监就任三年后离任；道格拉斯集团任命新任首席执行官",
+      "source": "WWD 国际时尚特讯",
+      "publish_date": "2026-10-16",
+      "url": "https://mp.weixin.qq.com/s/DdYaBiSpVpMgcC6j9IiHPQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 2938,
-      "title": "美国收紧低价货物清关规则；TikTok Shop上线AI购物助手；速卖通测试会员计划｜跨境电商周报",
-      "source": "亿邦动力",
-      "publish_date": "2026-10-11",
-      "url": "https://mp.weixin.qq.com/s/nzgJNy7W-nQVmacIkp4ckw",
+      "id": 3016,
+      "title": "国际鞋履 | 九月遇冷的球鞋二级市场，十月能否迎来回暖？",
+      "source": "WWD 国际时尚特讯",
+      "publish_date": "2026-10-16",
+      "url": "https://mp.weixin.qq.com/s/zvWdSedDm_mJ9SPBmXTYvw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 2945,
-      "title": "【财经早餐】2026.10.11星期日",
-      "source": "财经早餐",
-      "publish_date": "2026-10-11",
-      "url": "https://mp.weixin.qq.com/s/TirEuh3usqGM_LEckZMlMg",
+      "id": 3017,
+      "title": "China Insight｜中国品牌开始把美学放在商业前面",
+      "source": "WWD 国际时尚特讯",
+      "publish_date": "2026-10-16",
+      "url": "https://mp.weixin.qq.com/s/9zNNTGsnr4nYYeDrljnNVA",
       "summary": "",
       "keywords": [],
       "cover": ""
