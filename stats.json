@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2467,
+    "total_articles": 2490,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-16"
+      "end": "2026-10-17"
     },
-    "last_update": "2026-10-16T14:21:23.249688"
+    "last_update": "2026-10-17T09:16:56.235818"
   },
   "latest": [
     {
-      "id": 3051,
-      "title": "景旺电子，一个季度赚超半年！",
+      "id": 3097,
+      "title": "恒逸石化，为何突然这么赚钱？",
       "source": "财经早餐",
-      "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/MZp7vZobBHaf25FDo5s5gQ",
+      "publish_date": "2026-10-17",
+      "url": "https://mp.weixin.qq.com/s/RnhXvyjnIStSejvjK59XXA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3052,
-      "title": "【财经早餐】2026.10.16星期五",
+      "id": 3098,
+      "title": "【财经早餐】2026.10.17星期六",
       "source": "财经早餐",
-      "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/H_BTen0FxAoBY_yTv_ekJg",
+      "publish_date": "2026-10-17",
+      "url": "https://mp.weixin.qq.com/s/9qxD6-S1gTyhTGah0Cvidw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3015,
-      "title": "全球动态｜香奈儿全球精品部总裁辞去公司董事会职务；McQueen 创意总监就任三年后离任；道格拉斯集团任命新任首席执行官",
-      "source": "WWD 国际时尚特讯",
-      "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/DdYaBiSpVpMgcC6j9IiHPQ",
+      "id": 3099,
+      "title": "这一飞，特斯拉等了九年",
+      "source": "财经早餐",
+      "publish_date": "2026-10-17",
+      "url": "https://mp.weixin.qq.com/s/IN2tO_RIUekikCpJO-0wLQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3016,
-      "title": "国际鞋履 | 九月遇冷的球鞋二级市场，十月能否迎来回暖？",
-      "source": "WWD 国际时尚特讯",
+      "id": 3082,
+      "title": "SHEIN持续收紧物流管控：卖家服务评分低于4星取消运费补贴资格",
+      "source": "亿邦动力",
       "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/zvWdSedDm_mJ9SPBmXTYvw",
+      "url": "https://mp.weixin.qq.com/s/rMErQ8BqA5d24Y4jZEgVeg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3017,
-      "title": "China Insight｜中国品牌开始把美学放在商业前面",
-      "source": "WWD 国际时尚特讯",
+      "id": 3083,
+      "title": "小红书双11开局战报：友好商家GMV最高涨5倍",
+      "source": "亿邦动力",
       "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/9zNNTGsnr4nYYeDrljnNVA",
+      "url": "https://mp.weixin.qq.com/s/wNuyz57jGn_oK3A9txtklw",
       "summary": "",
       "keywords": [],
       "cover": ""
