@@ -449,3 +449,40 @@
 - `cosmetic-preview` 仓库remote URL还是SSH `git@github.com:...`（走Fake-IP会被劫持），如果以后需要推那个仓库建议改HTTPS + 复用本token
 - CHANGELOG历史断档：08-27之后到10-12的中间批次（22~27批）未在CHANGELOG单独记录，需要时可批量补录
 
+
+## 2026-10-17 重复文章清理
+
+### 问题现象
+- 用户在网站文章检索中看到【化妆品财经在线】公众号有 2 篇文章重复
+- 影响范围：4 组重复（上海日化协会 2 组、化妆品财经在线 1 组、铱星云商 1 组）
+- 9 条记录中 4 条需要清理
+
+### 根因排查过程
+- Step 1: 按 URL 去重 → 0 条（URL 列有 UNIQUE 约束，理论上不会重复）
+- Step 2: 按 (wechat_name, title, publish_date) 去重 → 4 组
+- Step 3: 比对每组的两个 URL 格式：
+  - ID 2227 URL: https://mp.weixin.qq.com/s/VyjWmPSuIW_DTl7ujHDXOA（短URL）
+  - ID 2986 URL: http://mp.weixin.qq.com/s?search_click_id=...&sn=...（长URL）
+  - 两者指向同一文章，但格式完全不同
+
+### 真正根因
+- dedup_against_db() 只按 URL 字符串完全匹配
+- 微信有两种 URL 格式：
+  1) 短URL: https://mp.weixin.qq.com/s/{HASH}
+  2) 长URL: mp.weixin.qq.com/s?search_click_id=...&__biz=...&sn={HASH}&chksm=...
+- 两个公众号（上海日化协会/化妆品财经在线/铱星云商）的采集源在 10-08~10-16 间产生了长URL版本的同一文章
+- 同一文章的 sn 参数在长URL里就是短URL的 HASH 部分
+- dedup 没识别这两个格式的关系，导致 4 篇文章被入库两次
+
+### 修复措施
+- 1. 删除 4 条长URL重复记录（ID: 2985/2986/2987/2993），保留短URL原始记录
+- 2. 备份被删记录到 batch_031/deleted_duplicates_20261017.json（可回滚）
+- 3. dedup_against_db() 新增 normalize_url() 函数：长URL 提取 sn 参数构造短URL，dedup 时同时匹配原URL和归一化URL
+- 4. 同步修复到 batch_029/030/031_import.py 三个模板
+- 5. 后续所有批次入库自动避免此类重复
+
+### 验证结果
+- 数据库: 2490 → 2486（-4）
+- 按 (wechat_name, title, publish_date) 重复组数: 4 → 0
+- 按 URL 重复数: 0（始终为 0）
+- 重跑 batch_031_import.py 验证：所有记录会因 normalize_url 命中 DB 已存在的短URL 而被过滤为 0 净新增
