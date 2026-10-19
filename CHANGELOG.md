@@ -558,3 +558,42 @@
 ### 关联变更
 - cosmetic-api 端已配套修复（见 cosmetic-api CHANGELOG 2026-10-19 条目）
 - 同步 commit: cosmetic-api main.py 加 Kimi K3 fallback（仓库无 remote，本地 commit）
+
+## 2026-10-19 11:25 第三十二批入库
+
+### 决策
+- Nick 通过飞书发送 1 个采集文件 (2026_10_19_95645.xlsx), 含 89 条 (公众号名 + URL)
+- 沿用 18 个白名单公众号, 全字段命中, 0 异常文件 (区别于 10-08 积压 4 个数据量偏少的文件)
+- 按 SOP 走批次入库前置状态确认: 先报基线 (v116/2486), 再报去重结果 (89→89→27 净新增), Nick 拍板后执行
+
+### 执行
+- 新建 `batch_032_import.py` (复用 batch_031 模板, 10-19 治理要点全部继承):
+  - DB_PATH 走 `COSMETIC_DB_PATH` 环境变量 (10-19 commit a0b70fd 治理)
+  - canonical_url 写入 + UNIQUE INDEX 兜底 (10-17 长 URL 重复 bugfix)
+  - publish_date 强制 YYYY-MM-DD 纯日期 (10-08 时分格式治理)
+  - 系统 Python 3.15 没 openpyxl + PEP 668 + macOS pip truststore bug, 用 zipfile + regex 直接解 xlsx
+- 文件内去重 89→89 (0 重复)
+- 跨 DB 去重 89→27 净新增, 全部命中白名单
+- 抓取 27 条 → 26 成功 / 1 失败 (WWD 抓不到 title, 非白名单 0)
+- 失败明细: 1 条 WWD 抓不到 title (re_filter on retry_step1_fetch_content)
+- 耗时: 0.4 分钟 (24.1 秒)
+- 成功入库 id 范围: 3101-3126
+- 抓到的 publish_date 分布: 10-17 / 10-18 / 10-19
+
+### 数据基线变化
+- db: 2486 → 2512 (+26)
+- 18 个白名单公众号全部覆盖, 分布:
+  - WWD 国际时尚特讯 5 / 财经早餐 4 / 个护前沿 3 / 亿邦动力 3 / 中国化妆品 2
+  - 化妆品观察 品观 2 / 化妆品财经在线 2 / 铱星云商 2 / Fbeauty 1 / Vogue 1
+  - 肤见未来实验室 1 / 非科学美妆传播 1
+- 数据版本: v116 → v117
+- 主站 (www.cosmetic-search.com) 已切到 data.v117.json (11:26 重新生成)
+
+### 同步
+- 7 个 HTML 自动改版本号 (export_data.py 第 4 段处理)
+- data.json + stats.json 同步刷新
+- 待 push: 7 HTML M + 2 JSON M + 1 JSON new + batch_032/ new + batch_032_import.py new
+
+### 关联
+- 前置: 10-19 早间数据库路径混淆治理收官 (commit 9c76f05 + a0b70fd)
+- 配套: cosmetic-api 仓 10-19 14:00 新建 + Kimi 单一 LLM (commit c91159f)
