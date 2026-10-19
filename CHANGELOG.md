@@ -486,3 +486,75 @@
 - 按 (wechat_name, title, publish_date) 重复组数: 4 → 0
 - 按 URL 重复数: 0（始终为 0）
 - 重跑 batch_031_import.py 验证：所有记录会因 normalize_url 命中 DB 已存在的短URL 而被过滤为 0 净新增
+
+
+## 2026-10-17 重复文章彻底修复（v2 治理）
+
+### 问题现象
+- 前序修复（v1）只在 import 脚本 dedup 层面拦截，DB 层无保护
+- 任何绕过 dedup 的插入（手动 SQL/其他采集源/历史脏数据）仍可能造成重复
+- 需要 DB 级别硬约束 + 主动审计
+
+### 真正根因
+- 数据库 articles 表无 (wechat_name, title, publish_date) 唯一索引
+- 唯一索引只有 url，而微信同一文章有两种URL格式（短/长）共享同一 HASH
+- 入库脚本的 dedup 是软约束，可被绕过
+
+### 彻底修复（DB层+脚本层+审计层 三轨）
+- **DB层**: 
+  1. 新增 `canonical_url` 列（TEXT），从 url 归一化提取，用于跨格式去重
+  2. 回填全部 2486 条记录的 canonical_url
+  3. 新增 UNIQUE INDEX `idx_unique_article` ON (wechat_name, title, publish_date) — DB级别硬约束，任何绕过 dedup 的插入都会被拒绝
+  4. 新增普通索引 `idx_canonical_url` — 加速查询
+- **脚本层**:
+  5. insert_article() 升级为 `INSERT OR IGNORE` + 写入 canonical_url — 即便绕过 dedup，DB层也会拦截
+  6. 同步 batch_029/030/031 三个模板
+- **审计层**:
+  7. 新建 `dedup_check.py` 主动审计脚本：检查 (wechat_name+title+date) 重复、URL 归一化未生效、canonical_url 重复三类问题
+  8. 接入 export_data.py 入口，每次导出前自动跑审计，发现问题立即停止导出
+
+### 验证结果
+- DB schema: articles 表 5 个索引（含1个UNIQUE INDEX + 1个新普通索引）
+- canonical_url 回填率: 2486/2486 = 100%
+- 审计脚本运行: (wechat_name+title+date) 重复 = 0 / URL归一化未生效 = 0 / canonical_url重复 = 0
+- UNIQUE INDEX 拦截测试: 重复插入返回 IntegrityError "UNIQUE constraint failed"，符合预期
+- 同步链路: dedup_check → 拦截任何新重复数据 → 保护 ECS + GitHub Pages
+
+### 长期治理
+- 任何新批次入库 → insert_article 自动 canonical_url + INSERT OR IGNORE → DB层兜底
+- 任何数据导出 → export_data.py 自动跑审计 → 数据问题立即浮出
+- 任何手动 SQL 插入 → UNIQUE INDEX 拒绝重复
+- 历史脏数据: 4 条已删（v115→v116 时清理）
+
+## 2026-10-19 数据库路径混淆根治收官（Step 4 最后一环）
+
+### 问题现象
+- 10-08 记录的"数据库路径混淆第四次复发"在 export_data.py 仍存在 DB_PATH 硬编码
+- 与 main.py（Step 1-3 已完成）的环境变量化不一致，deploy 仓和 api 仓路径分裂
+- 任何路径变更需双倍修改且容易遗漏
+
+### 真正根因
+- export_data.py:14 硬编码 `~/.openclaw/workspace/cosmetic-deploy/cosmetic_articles.db`
+- 与 10-08/10-17/09-10 等多次复发的同一根因：硬编码 + 没有环境变量化
+
+### 修复措施
+- export_data.py DB_PATH 改用 `os.environ.get('COSMETIC_DB_PATH', os.path.expanduser('~/.openclaw/workspace/cosmetic-deploy/cosmetic_articles.db'))`
+- 与 main.py 完全统一：从 COSMETIC_DB_PATH 读，缺省 fallback 到 deploy 仓 db
+
+### 完整治理链（4 层一致）
+- main.py（cosmetic-api）: `DB_PATH = os.environ.get('COSMETIC_DB_PATH', '/opt/cosmetic-api/data/cosmetic_articles.db')`
+- export_data.py（cosmetic-deploy）: `DB_PATH = os.environ.get('COSMETIC_DB_PATH', os.path.expanduser('~/.openclaw/workspace/cosmetic-deploy/cosmetic_articles.db'))`
+- uvicorn 启动: launchd plist `com.cosmetic.api.plist` 设 `COSMETIC_DB_PATH=/Users/yuming.chen/.openclaw/workspace/cosmetic-deploy/cosmetic_articles.db`
+- 数据真源: deploy 仓 cosmetic_articles.db（35MB, 2,486 articles）
+
+### 验证结果
+- export_data.py 语法检查 OK
+- env 优先级测试: `COSMETIC_DB_PATH=/tmp/fake.db` → DB_PATH 用了 env（✓）
+- fallback 测试: 无 env → DB_PATH 用 `~/.openclaw/workspace/cosmetic-deploy/cosmetic_articles.db`（✓）
+- DB 读测试: 2,486 articles 成功读取
+- 本地 commit: `a0b70fd`（1 file changed, 3 insertions, 1 deletion）
+- git push origin main: 网络故障"Failed to connect to github.com port 443"，待网络恢复重试
+
+### 关联变更
+- cosmetic-api 端已配套修复（见 cosmetic-api CHANGELOG 2026-10-19 条目）
+- 同步 commit: cosmetic-api main.py 加 Kimi K3 fallback（仓库无 remote，本地 commit）

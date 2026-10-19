@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2486,
+    "total_articles": 2512,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-17"
+      "end": "2026-10-19"
     },
-    "last_update": "2026-10-17T09:23:21.304431"
+    "last_update": "2026-10-19T11:26:47.418062"
   },
   "latest": [
     {
-      "id": 3097,
-      "title": "恒逸石化，为何突然这么赚钱？",
+      "id": 3120,
+      "title": "【财经早餐】2026.10.19星期一",
       "source": "财经早餐",
-      "publish_date": "2026-10-17",
-      "url": "https://mp.weixin.qq.com/s/RnhXvyjnIStSejvjK59XXA",
+      "publish_date": "2026-10-19",
+      "url": "https://mp.weixin.qq.com/s/Y03HXCm_0R7M7Gjr19FuXQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3098,
-      "title": "【财经早餐】2026.10.17星期六",
+      "id": 3121,
+      "title": "全球柴油告急，炼化龙头利润弹性回来了？",
       "source": "财经早餐",
-      "publish_date": "2026-10-17",
-      "url": "https://mp.weixin.qq.com/s/9qxD6-S1gTyhTGah0Cvidw",
+      "publish_date": "2026-10-19",
+      "url": "https://mp.weixin.qq.com/s/JRu6t-FKYrZ1QXF-SyZs7A",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3099,
-      "title": "这一飞，特斯拉等了九年",
-      "source": "财经早餐",
-      "publish_date": "2026-10-17",
-      "url": "https://mp.weixin.qq.com/s/IN2tO_RIUekikCpJO-0wLQ",
+      "id": 3103,
+      "title": "国际鞋履 | 大促季临近，“加码”或为今年鞋履零售促销关键词",
+      "source": "WWD 国际时尚特讯",
+      "publish_date": "2026-10-19",
+      "url": "https://mp.weixin.qq.com/s/atSlAlcdzZWC0fVzuUYjFQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3082,
-      "title": "SHEIN持续收紧物流管控：卖家服务评分低于4星取消运费补贴资格",
-      "source": "亿邦动力",
-      "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/rMErQ8BqA5d24Y4jZEgVeg",
+      "id": 3104,
+      "title": "零售前瞻｜通胀没有压缩假日消费，钱包份额流向履约最确定的零售商",
+      "source": "WWD 国际时尚特讯",
+      "publish_date": "2026-10-19",
+      "url": "https://mp.weixin.qq.com/s/dzxhVoLK6Q8Go7epgfPpoQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3083,
-      "title": "小红书双11开局战报：友好商家GMV最高涨5倍",
-      "source": "亿邦动力",
-      "publish_date": "2026-10-16",
-      "url": "https://mp.weixin.qq.com/s/wNuyz57jGn_oK3A9txtklw",
+      "id": 3105,
+      "title": "焦点｜当增长回归需求底座，斯凯奇拿出了几种赢法？",
+      "source": "WWD 国际时尚特讯",
+      "publish_date": "2026-10-19",
+      "url": "https://mp.weixin.qq.com/s/qgINp-wqbHxUH4YjfqRBvw",
       "summary": "",
       "keywords": [],
       "cover": ""
