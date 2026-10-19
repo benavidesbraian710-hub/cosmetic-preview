@@ -597,3 +597,26 @@
 ### 关联
 - 前置: 10-19 早间数据库路径混淆治理收官 (commit 9c76f05 + a0b70fd)
 - 配套: cosmetic-api 仓 10-19 14:00 新建 + Kimi 单一 LLM (commit c91159f)
+
+## 2026-10-19 11:38 第三十二批 retry (WWD 1 篇)
+
+### 决策
+- Nick 拍板"遇到不行的就重试", 针对 batch_032 失败的 1 条 WWD (URL: /s/A-_o-_PNHGuDue_OvYUyTQ)
+- 根因分析: iPhone Safari UA 触发微信 302 反爬 captcha, urllib.request 重试逻辑只重试网络层错误, 不处理 captcha 拦截
+- 修复路径: 改用桌面 Chrome UA + iPhone Safari UA 两次 GET, 拿完整 HTML 后用 var ct 解析真日期
+
+### 执行
+- 第 1 次 (curl -L + iPhone Safari UA): HTML 28KB (captcha 拦截), 4 种 publish_time pattern 全未匹配
+- 第 2 次 (curl -L + 桌面 Chrome UA + 持久 cookie jar): HTML 3.8MB, 命中 var ct = 1792371600 → 2026-10-19 09:00:00
+- 第 3 次入库: 标题 "全球动态｜历峰集团与 Signet 洽谈加入 De Beers 竞购方; Brunello Cucinelli 前三季度销售额增长 13%; Calvin Klein 创意总监将离任", 日期 2026-10-19
+- id=3127, wechat_name=WWD 国际时尚特讯
+- 11:38 export_data.py → v118 (2513 篇), ECS 同步 2513=2513, API 已更新
+
+### 数据基线
+- db: 2512 → 2513 (+1, retry 补齐)
+- 数据版本: v117 → v118
+- 1 篇 WWD 标题中带 \xa0 (不间断空格), 来自原文 HTML, 保留原样不修
+
+### 同步
+- 待 push: 7 HTML M + data.json/stats.json M + data.v118.json new
+- ECS 同步: ✅ 2513=2513
