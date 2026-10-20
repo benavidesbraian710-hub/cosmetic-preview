@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2513,
+    "total_articles": 2537,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-19"
+      "end": "2026-10-20"
     },
-    "last_update": "2026-10-19T11:38:04.530487"
+    "last_update": "2026-10-20T10:26:37.871287"
   },
   "latest": [
     {
-      "id": 3120,
-      "title": "【财经早餐】2026.10.19星期一",
+      "id": 3148,
+      "title": "【财经早餐】2026.10.20星期二",
       "source": "财经早餐",
-      "publish_date": "2026-10-19",
-      "url": "https://mp.weixin.qq.com/s/Y03HXCm_0R7M7Gjr19FuXQ",
+      "publish_date": "2026-10-20",
+      "url": "https://mp.weixin.qq.com/s/czNpt08kczm00F-gDkyqkQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3121,
-      "title": "全球柴油告急，炼化龙头利润弹性回来了？",
+      "id": 3149,
+      "title": "海康威视：利润增长近四成，安防技术走进工厂",
       "source": "财经早餐",
-      "publish_date": "2026-10-19",
-      "url": "https://mp.weixin.qq.com/s/JRu6t-FKYrZ1QXF-SyZs7A",
+      "publish_date": "2026-10-20",
+      "url": "https://mp.weixin.qq.com/s/FugvNb3q7T7nolBpWHz6ow",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3103,
-      "title": "国际鞋履 | 大促季临近，“加码”或为今年鞋履零售促销关键词",
-      "source": "WWD 国际时尚特讯",
-      "publish_date": "2026-10-19",
-      "url": "https://mp.weixin.qq.com/s/atSlAlcdzZWC0fVzuUYjFQ",
+      "id": 3150,
+      "title": "白银价格再次“腰斩”，黄金还能扛得住吗？",
+      "source": "财经早餐",
+      "publish_date": "2026-10-20",
+      "url": "https://mp.weixin.qq.com/s/auSY9sQinQIGvyE_M5RneA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3104,
-      "title": "零售前瞻｜通胀没有压缩假日消费，钱包份额流向履约最确定的零售商",
-      "source": "WWD 国际时尚特讯",
-      "publish_date": "2026-10-19",
-      "url": "https://mp.weixin.qq.com/s/dzxhVoLK6Q8Go7epgfPpoQ",
+      "id": 3147,
+      "title": "一项系统综述如何评估透明质酸填充剂的迟发性炎症反应",
+      "source": "肤见未来实验室",
+      "publish_date": "2026-10-20",
+      "url": "https://mp.weixin.qq.com/s/p7DqFARq07W0xZGxxRnV5w",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3105,
-      "title": "焦点｜当增长回归需求底座，斯凯奇拿出了几种赢法？",
-      "source": "WWD 国际时尚特讯",
+      "id": 3134,
+      "title": "微信小店“小店加热”上线商品托管：投放自动化，中小商家门槛再降",
+      "source": "亿邦动力",
       "publish_date": "2026-10-19",
-      "url": "https://mp.weixin.qq.com/s/qgINp-wqbHxUH4YjfqRBvw",
+      "url": "https://mp.weixin.qq.com/s/jX-1I_moNrm26faw-kxAGQ",
       "summary": "",
       "keywords": [],
       "cover": ""
