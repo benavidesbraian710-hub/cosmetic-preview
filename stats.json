@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2537,
+    "total_articles": 2598,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-20"
+      "end": "2026-10-22"
     },
-    "last_update": "2026-10-20T10:26:37.871287"
+    "last_update": "2026-10-22T17:51:35.302682"
   },
   "latest": [
     {
-      "id": 3148,
-      "title": "【财经早餐】2026.10.20星期二",
+      "id": 3212,
+      "title": "【财经早餐】2026.10.22星期四",
       "source": "财经早餐",
-      "publish_date": "2026-10-20",
-      "url": "https://mp.weixin.qq.com/s/czNpt08kczm00F-gDkyqkQ",
+      "publish_date": "2026-10-22",
+      "url": "https://mp.weixin.qq.com/s/eruqXqKNauFX3Ce8gOzDTg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3149,
-      "title": "海康威视：利润增长近四成，安防技术走进工厂",
-      "source": "财经早餐",
-      "publish_date": "2026-10-20",
-      "url": "https://mp.weixin.qq.com/s/FugvNb3q7T7nolBpWHz6ow",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3150,
-      "title": "白银价格再次“腰斩”，黄金还能扛得住吗？",
-      "source": "财经早餐",
-      "publish_date": "2026-10-20",
-      "url": "https://mp.weixin.qq.com/s/auSY9sQinQIGvyE_M5RneA",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3147,
-      "title": "一项系统综述如何评估透明质酸填充剂的迟发性炎症反应",
+      "id": 3211,
+      "title": "含番茄提取物的功效护肤霜与克利格曼配方治疗黄褐斑的比较研究",
       "source": "肤见未来实验室",
-      "publish_date": "2026-10-20",
-      "url": "https://mp.weixin.qq.com/s/p7DqFARq07W0xZGxxRnV5w",
+      "publish_date": "2026-10-22",
+      "url": "https://mp.weixin.qq.com/s/mJR6NX1jmBH-3K6klwLMCA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3134,
-      "title": "微信小店“小店加热”上线商品托管：投放自动化，中小商家门槛再降",
+      "id": 3188,
+      "title": "一年卖出千万把拖把，她还想把生意做到10亿丨专访宝家洁CEO习亚兰",
       "source": "亿邦动力",
-      "publish_date": "2026-10-19",
-      "url": "https://mp.weixin.qq.com/s/jX-1I_moNrm26faw-kxAGQ",
+      "publish_date": "2026-10-21",
+      "url": "https://mp.weixin.qq.com/s/Xcfnnxb623_EXFZQ4_hWbg",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3189,
+      "title": "双11期间七鲜美食MALL北京首店落地：定位为全国首座智能美食空间，日均客流超3万",
+      "source": "亿邦动力",
+      "publish_date": "2026-10-21",
+      "url": "https://mp.weixin.qq.com/s/HhQyNmQVhulbq9JA8oFe-A",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3190,
+      "title": "小红书REDone上线：双11不拼低价，拼“好品味”",
+      "source": "亿邦动力",
+      "publish_date": "2026-10-21",
+      "url": "https://mp.weixin.qq.com/s/l9eEIS6EbgPvvUidffeNlA",
       "summary": "",
       "keywords": [],
       "cover": ""
