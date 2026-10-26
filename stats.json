@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2599,
+    "total_articles": 2692,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-22"
+      "end": "2026-10-26"
     },
-    "last_update": "2026-10-22T17:58:42.213238"
+    "last_update": "2026-10-26T11:04:29.476173"
   },
   "latest": [
     {
-      "id": 3212,
-      "title": "【财经早餐】2026.10.22星期四",
+      "id": 3301,
+      "title": "【财经早餐】2026.10.26星期一",
       "source": "财经早餐",
-      "publish_date": "2026-10-22",
-      "url": "https://mp.weixin.qq.com/s/eruqXqKNauFX3Ce8gOzDTg",
+      "publish_date": "2026-10-26",
+      "url": "https://mp.weixin.qq.com/s/HSmBJjubo704KYNjoYK0Cw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3211,
-      "title": "含番茄提取物的功效护肤霜与克利格曼配方治疗黄褐斑的比较研究",
+      "id": 3302,
+      "title": "A股不必太悲观，但理由不只是周五那根大阳线",
+      "source": "财经早餐",
+      "publish_date": "2026-10-26",
+      "url": "https://mp.weixin.qq.com/s/y3X43jhbpSsmNCB5pR22gQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3303,
+      "title": "金饰克价一个月跌100元，水贝市场被挤爆！",
+      "source": "财经早餐",
+      "publish_date": "2026-10-26",
+      "url": "https://mp.weixin.qq.com/s/MjGeZFH6sNNONG88KAMsnA",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3300,
+      "title": "胎鼠不同发育阶段成纤维细胞来源细胞外囊泡的抗纤维化作用研究",
       "source": "肤见未来实验室",
-      "publish_date": "2026-10-22",
-      "url": "https://mp.weixin.qq.com/s/mJR6NX1jmBH-3K6klwLMCA",
+      "publish_date": "2026-10-26",
+      "url": "https://mp.weixin.qq.com/s/0lXe8hV6zPJsgjPh_rbmUg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3188,
-      "title": "一年卖出千万把拖把，她还想把生意做到10亿丨专访宝家洁CEO习亚兰",
+      "id": 3292,
+      "title": "速卖通和天猫联手；沃尔玛开放AI代理购物；eBay再度全球裁员｜跨境电商周报",
       "source": "亿邦动力",
-      "publish_date": "2026-10-21",
-      "url": "https://mp.weixin.qq.com/s/Xcfnnxb623_EXFZQ4_hWbg",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3189,
-      "title": "双11期间七鲜美食MALL北京首店落地：定位为全国首座智能美食空间，日均客流超3万",
-      "source": "亿邦动力",
-      "publish_date": "2026-10-21",
-      "url": "https://mp.weixin.qq.com/s/HhQyNmQVhulbq9JA8oFe-A",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3190,
-      "title": "小红书REDone上线：双11不拼低价，拼“好品味”",
-      "source": "亿邦动力",
-      "publish_date": "2026-10-21",
-      "url": "https://mp.weixin.qq.com/s/l9eEIS6EbgPvvUidffeNlA",
+      "publish_date": "2026-10-25",
+      "url": "https://mp.weixin.qq.com/s/7MzdoDRm5nwvSx2zueDSjQ",
       "summary": "",
       "keywords": [],
       "cover": ""
