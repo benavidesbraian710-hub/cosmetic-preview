@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2692,
+    "total_articles": 2786,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-26"
+      "end": "2026-10-29"
     },
-    "last_update": "2026-10-26T11:04:29.476173"
+    "last_update": "2026-10-29T12:00:54.879597"
   },
   "latest": [
     {
-      "id": 3301,
-      "title": "【财经早餐】2026.10.26星期一",
+      "id": 3397,
+      "title": "【财经早餐】2026.10.29星期四",
       "source": "财经早餐",
-      "publish_date": "2026-10-26",
-      "url": "https://mp.weixin.qq.com/s/HSmBJjubo704KYNjoYK0Cw",
+      "publish_date": "2026-10-29",
+      "url": "https://mp.weixin.qq.com/s/Di94DyHW_auLV9vOI_g0eQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3302,
-      "title": "A股不必太悲观，但理由不只是周五那根大阳线",
+      "id": 3398,
+      "title": "潜心技术的格力，不只想卖空调了",
       "source": "财经早餐",
-      "publish_date": "2026-10-26",
-      "url": "https://mp.weixin.qq.com/s/y3X43jhbpSsmNCB5pR22gQ",
+      "publish_date": "2026-10-29",
+      "url": "https://mp.weixin.qq.com/s/6MNZvvE7uSN2WmSd_HRjlw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3303,
-      "title": "金饰克价一个月跌100元，水贝市场被挤爆！",
-      "source": "财经早餐",
-      "publish_date": "2026-10-26",
-      "url": "https://mp.weixin.qq.com/s/MjGeZFH6sNNONG88KAMsnA",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3300,
-      "title": "胎鼠不同发育阶段成纤维细胞来源细胞外囊泡的抗纤维化作用研究",
+      "id": 3396,
+      "title": "结合拉曼成像与空间转录组，研究衰老细胞的多模态特征",
       "source": "肤见未来实验室",
-      "publish_date": "2026-10-26",
-      "url": "https://mp.weixin.qq.com/s/0lXe8hV6zPJsgjPh_rbmUg",
+      "publish_date": "2026-10-29",
+      "url": "https://mp.weixin.qq.com/s/CRWOx3R2sSyvrwxX0HDgkg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3292,
-      "title": "速卖通和天猫联手；沃尔玛开放AI代理购物；eBay再度全球裁员｜跨境电商周报",
+      "id": 3377,
+      "title": "阿里健康上线“护士上门”服务，覆盖全国250多个城市",
       "source": "亿邦动力",
-      "publish_date": "2026-10-25",
-      "url": "https://mp.weixin.qq.com/s/7MzdoDRm5nwvSx2zueDSjQ",
+      "publish_date": "2026-10-28",
+      "url": "https://mp.weixin.qq.com/s/00xOgaKGEHciw5uRBppSLQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3378,
+      "title": "中宠股份前三季度加大品牌宣传投入，净利润同比下降45.86%",
+      "source": "亿邦动力",
+      "publish_date": "2026-10-28",
+      "url": "https://mp.weixin.qq.com/s/SXjaa5Gf3rQlhCqRieRkWA",
       "summary": "",
       "keywords": [],
       "cover": ""
