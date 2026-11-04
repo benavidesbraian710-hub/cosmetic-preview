@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2786,
+    "total_articles": 2943,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-10-29"
+      "end": "2026-11-04"
     },
-    "last_update": "2026-10-29T12:00:54.879597"
+    "last_update": "2026-11-04T16:49:32.828221"
   },
   "latest": [
     {
-      "id": 3397,
-      "title": "【财经早餐】2026.10.29星期四",
+      "id": 3547,
+      "title": "【财经早餐】2026.11.04星期三",
       "source": "财经早餐",
-      "publish_date": "2026-10-29",
-      "url": "https://mp.weixin.qq.com/s/Di94DyHW_auLV9vOI_g0eQ",
+      "publish_date": "2026-11-04",
+      "url": "https://mp.weixin.qq.com/s/QdYjtaTOPfAwvzvrIycXsQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3398,
-      "title": "潜心技术的格力，不只想卖空调了",
+      "id": 3548,
+      "title": "红果短剧用户数超越豆包，释放什么信号？",
       "source": "财经早餐",
-      "publish_date": "2026-10-29",
-      "url": "https://mp.weixin.qq.com/s/6MNZvvE7uSN2WmSd_HRjlw",
+      "publish_date": "2026-11-04",
+      "url": "https://mp.weixin.qq.com/s/84RveRow1yrYAY7iEPHMhQ",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3396,
-      "title": "结合拉曼成像与空间转录组，研究衰老细胞的多模态特征",
+      "id": 3546,
+      "title": "细胞也会“带坏”邻居？最新研究揭示无炎性旁分泌衰老新机制",
       "source": "肤见未来实验室",
-      "publish_date": "2026-10-29",
-      "url": "https://mp.weixin.qq.com/s/CRWOx3R2sSyvrwxX0HDgkg",
+      "publish_date": "2026-11-04",
+      "url": "https://mp.weixin.qq.com/s/5h-j4N21Kb5wAaQ9EX1zxg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3377,
-      "title": "阿里健康上线“护士上门”服务，覆盖全国250多个城市",
-      "source": "亿邦动力",
-      "publish_date": "2026-10-28",
-      "url": "https://mp.weixin.qq.com/s/00xOgaKGEHciw5uRBppSLQ",
+      "id": 3545,
+      "title": "AI怎么用，出海怎么走？进博会上，听听这五场分享",
+      "source": "美业颜究院",
+      "publish_date": "2026-11-04",
+      "url": "https://mp.weixin.qq.com/s/Cauz_8KOw4XKCHyvKhxg1Q",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3378,
-      "title": "中宠股份前三季度加大品牌宣传投入，净利润同比下降45.86%",
+      "id": 3527,
+      "title": "秒级售罄与天猫四连冠背后，珀莱雅凭什么在今年双11逆势狂飙？",
       "source": "亿邦动力",
-      "publish_date": "2026-10-28",
-      "url": "https://mp.weixin.qq.com/s/SXjaa5Gf3rQlhCqRieRkWA",
+      "publish_date": "2026-11-03",
+      "url": "https://mp.weixin.qq.com/s/2VDXSg1S162Dx1RqJhFknA",
       "summary": "",
       "keywords": [],
       "cover": ""
