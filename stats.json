@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 2943,
+    "total_articles": 3042,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-11-04"
+      "end": "2026-11-08"
     },
-    "last_update": "2026-11-04T16:49:32.828221"
+    "last_update": "2026-11-08T09:41:49.377640"
   },
   "latest": [
     {
-      "id": 3547,
-      "title": "【财经早餐】2026.11.04星期三",
+      "id": 3654,
+      "title": "【财经早餐】2026.11.08星期日",
       "source": "财经早餐",
-      "publish_date": "2026-11-04",
-      "url": "https://mp.weixin.qq.com/s/QdYjtaTOPfAwvzvrIycXsQ",
+      "publish_date": "2026-11-08",
+      "url": "https://mp.weixin.qq.com/s/661GRdeYzSXok2SrrCLSSA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3548,
-      "title": "红果短剧用户数超越豆包，释放什么信号？",
+      "id": 3655,
+      "title": "央行连续24个月增持黄金，释放什么信号？",
       "source": "财经早餐",
-      "publish_date": "2026-11-04",
-      "url": "https://mp.weixin.qq.com/s/84RveRow1yrYAY7iEPHMhQ",
+      "publish_date": "2026-11-08",
+      "url": "https://mp.weixin.qq.com/s/M6v-Go02KdAqLCoiDjLmbw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3546,
-      "title": "细胞也会“带坏”邻居？最新研究揭示无炎性旁分泌衰老新机制",
-      "source": "肤见未来实验室",
-      "publish_date": "2026-11-04",
-      "url": "https://mp.weixin.qq.com/s/5h-j4N21Kb5wAaQ9EX1zxg",
+      "id": 3656,
+      "title": "海淀孩子请假，深圳孩子创业，我们到底在羡慕什么",
+      "source": "财经早餐",
+      "publish_date": "2026-11-08",
+      "url": "https://mp.weixin.qq.com/s/gTdqgN3G7jezjsWZu8q87g",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3545,
-      "title": "AI怎么用，出海怎么走？进博会上，听听这五场分享",
-      "source": "美业颜究院",
-      "publish_date": "2026-11-04",
-      "url": "https://mp.weixin.qq.com/s/Cauz_8KOw4XKCHyvKhxg1Q",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3527,
-      "title": "秒级售罄与天猫四连冠背后，珀莱雅凭什么在今年双11逆势狂飙？",
+      "id": 3642,
+      "title": "京东双11买电脑送Token；182个新品牌冲进天猫各行业TOP10榜单；巨量引擎取消代理商返点；小鹏、小米10月交付新车均超5万台丨电商周报",
       "source": "亿邦动力",
-      "publish_date": "2026-11-03",
-      "url": "https://mp.weixin.qq.com/s/2VDXSg1S162Dx1RqJhFknA",
+      "publish_date": "2026-11-07",
+      "url": "https://mp.weixin.qq.com/s/i_6l_R4BtLDYnCn1DrOHkw",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3647,
+      "title": "九赴进博，郭广昌给复星换了一道题",
+      "source": "财经早餐",
+      "publish_date": "2026-11-07",
+      "url": "https://mp.weixin.qq.com/s/0jOzmw-_DE0C_3so_kHE4g",
       "summary": "",
       "keywords": [],
       "cover": ""
