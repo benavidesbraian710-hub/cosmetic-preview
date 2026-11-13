@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 3042,
+    "total_articles": 3089,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-11-08"
+      "end": "2026-11-10"
     },
-    "last_update": "2026-11-08T09:41:49.377640"
+    "last_update": "2026-11-13T14:17:33.262716"
   },
   "latest": [
     {
-      "id": 3654,
-      "title": "【财经早餐】2026.11.08星期日",
+      "id": 3692,
+      "title": "【财经早餐】2026.11.10星期二",
       "source": "财经早餐",
-      "publish_date": "2026-11-08",
-      "url": "https://mp.weixin.qq.com/s/661GRdeYzSXok2SrrCLSSA",
+      "publish_date": "2026-11-10",
+      "url": "https://mp.weixin.qq.com/s/kievnoGgd_ojvzmIdZUK4g",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3655,
-      "title": "央行连续24个月增持黄金，释放什么信号？",
+      "id": 3693,
+      "title": "进博会九年：全球企业看中的，变了",
       "source": "财经早餐",
-      "publish_date": "2026-11-08",
-      "url": "https://mp.weixin.qq.com/s/M6v-Go02KdAqLCoiDjLmbw",
+      "publish_date": "2026-11-10",
+      "url": "https://mp.weixin.qq.com/s/uld2hIjYwgM7deyCW2xnTA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3656,
-      "title": "海淀孩子请假，深圳孩子创业，我们到底在羡慕什么",
+      "id": 3694,
+      "title": "A+H同日出手！H股上市133天首启回购，领益智造如何把信心写进长期价值",
       "source": "财经早餐",
-      "publish_date": "2026-11-08",
-      "url": "https://mp.weixin.qq.com/s/gTdqgN3G7jezjsWZu8q87g",
+      "publish_date": "2026-11-10",
+      "url": "https://mp.weixin.qq.com/s/YCquJAfC9ZMDuXSoWAwnTg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3642,
-      "title": "京东双11买电脑送Token；182个新品牌冲进天猫各行业TOP10榜单；巨量引擎取消代理商返点；小鹏、小米10月交付新车均超5万台丨电商周报",
-      "source": "亿邦动力",
-      "publish_date": "2026-11-07",
-      "url": "https://mp.weixin.qq.com/s/i_6l_R4BtLDYnCn1DrOHkw",
+      "id": 3695,
+      "title": "老底子，新动能：镇江制造有多硬核？",
+      "source": "财经早餐",
+      "publish_date": "2026-11-10",
+      "url": "https://mp.weixin.qq.com/s/tJqax5oXMNs7j2RYO7TfWg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3647,
-      "title": "九赴进博，郭广昌给复星换了一道题",
-      "source": "财经早餐",
-      "publish_date": "2026-11-07",
-      "url": "https://mp.weixin.qq.com/s/0jOzmw-_DE0C_3so_kHE4g",
+      "id": 3690,
+      "title": "低剂量口服米诺地尔与透明质酸相关性探讨",
+      "source": "肤见未来实验室",
+      "publish_date": "2026-11-10",
+      "url": "https://mp.weixin.qq.com/s/-KGFef_0oyn_3aqeMiXJ9g",
       "summary": "",
       "keywords": [],
       "cover": ""
