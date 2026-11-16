@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 3089,
+    "total_articles": 3203,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-11-10"
+      "end": "2026-11-16"
     },
-    "last_update": "2026-11-13T14:17:33.262716"
+    "last_update": "2026-11-16T11:06:44.397113"
   },
   "latest": [
     {
-      "id": 3692,
-      "title": "【财经早餐】2026.11.10星期二",
+      "id": 3815,
+      "title": "【财经早餐】2026.11.16星期一",
       "source": "财经早餐",
-      "publish_date": "2026-11-10",
-      "url": "https://mp.weixin.qq.com/s/kievnoGgd_ojvzmIdZUK4g",
+      "publish_date": "2026-11-16",
+      "url": "https://mp.weixin.qq.com/s/oUzvRVMdCs9y6AdpfTfjaw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3693,
-      "title": "进博会九年：全球企业看中的，变了",
+      "id": 3816,
+      "title": "英伟达财报撞上Anthropic万亿IPO，AI交易迎大考验",
       "source": "财经早餐",
-      "publish_date": "2026-11-10",
-      "url": "https://mp.weixin.qq.com/s/uld2hIjYwgM7deyCW2xnTA",
+      "publish_date": "2026-11-16",
+      "url": "https://mp.weixin.qq.com/s/2PpMJau8xsDyPIWnMl8-oA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3694,
-      "title": "A+H同日出手！H股上市133天首启回购，领益智造如何把信心写进长期价值",
-      "source": "财经早餐",
-      "publish_date": "2026-11-10",
-      "url": "https://mp.weixin.qq.com/s/YCquJAfC9ZMDuXSoWAwnTg",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3695,
-      "title": "老底子，新动能：镇江制造有多硬核？",
-      "source": "财经早餐",
-      "publish_date": "2026-11-10",
-      "url": "https://mp.weixin.qq.com/s/tJqax5oXMNs7j2RYO7TfWg",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3690,
-      "title": "低剂量口服米诺地尔与透明质酸相关性探讨",
+      "id": 3814,
+      "title": "光电项目后红烫难退？最新半脸实测拆解敏肌屏障修护关键期",
       "source": "肤见未来实验室",
-      "publish_date": "2026-11-10",
-      "url": "https://mp.weixin.qq.com/s/-KGFef_0oyn_3aqeMiXJ9g",
+      "publish_date": "2026-11-16",
+      "url": "https://mp.weixin.qq.com/s/VT0sQkK8z7-5DiEp6ykKRQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3806,
+      "title": "商家可在ChatGPT“开店”了；亚马逊Haul接入主站搜索；TikTok Shop东南亚下调跨境直邮价卡｜跨境电商周报",
+      "source": "亿邦动力",
+      "publish_date": "2026-11-15",
+      "url": "https://mp.weixin.qq.com/s/lp2SZgRF4TAsEEcRsX6h_Q",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3807,
+      "title": "钢银电商披露交易履约财务运营四大智能体；云汉芯城推进全链路AI配单；齐心智磐完成AI服务备案；泛鼎国际披露海外新业绩丨产业互联网周报",
+      "source": "亿邦动力",
+      "publish_date": "2026-11-15",
+      "url": "https://mp.weixin.qq.com/s/QyrcK2nxeMp2CG1ikvpz-g",
       "summary": "",
       "keywords": [],
       "cover": ""
