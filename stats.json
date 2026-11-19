@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 3203,
+    "total_articles": 3286,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-11-16"
+      "end": "2026-11-19"
     },
-    "last_update": "2026-11-16T11:06:44.397113"
+    "last_update": "2026-11-19T12:06:48.825351"
   },
   "latest": [
     {
-      "id": 3815,
-      "title": "【财经早餐】2026.11.16星期一",
+      "id": 3898,
+      "title": "两市成交额创年内新低，释放什么信号？",
       "source": "财经早餐",
-      "publish_date": "2026-11-16",
-      "url": "https://mp.weixin.qq.com/s/oUzvRVMdCs9y6AdpfTfjaw",
+      "publish_date": "2026-11-19",
+      "url": "https://mp.weixin.qq.com/s/9BFnqCYqrqbEDhcSUXYUPg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3816,
-      "title": "英伟达财报撞上Anthropic万亿IPO，AI交易迎大考验",
+      "id": 3899,
+      "title": "【财经早餐】2026.11.19星期四",
       "source": "财经早餐",
-      "publish_date": "2026-11-16",
-      "url": "https://mp.weixin.qq.com/s/2PpMJau8xsDyPIWnMl8-oA",
+      "publish_date": "2026-11-19",
+      "url": "https://mp.weixin.qq.com/s/uzgRd3nQFk6zc-f8Sj-K8Q",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3814,
-      "title": "光电项目后红烫难退？最新半脸实测拆解敏肌屏障修护关键期",
+      "id": 3897,
+      "title": "长寿小鼠的肝脏，悄悄换了一种“燃料”",
       "source": "肤见未来实验室",
-      "publish_date": "2026-11-16",
-      "url": "https://mp.weixin.qq.com/s/VT0sQkK8z7-5DiEp6ykKRQ",
+      "publish_date": "2026-11-19",
+      "url": "https://mp.weixin.qq.com/s/9_uam09K3nj2qzsPUimXdw",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3806,
-      "title": "商家可在ChatGPT“开店”了；亚马逊Haul接入主站搜索；TikTok Shop东南亚下调跨境直邮价卡｜跨境电商周报",
+      "id": 3882,
+      "title": "抖音双11终极榜单：美容个护霸主地位动摇 男女装仍有机会",
       "source": "亿邦动力",
-      "publish_date": "2026-11-15",
-      "url": "https://mp.weixin.qq.com/s/lp2SZgRF4TAsEEcRsX6h_Q",
+      "publish_date": "2026-11-18",
+      "url": "https://mp.weixin.qq.com/s/WlwD3v6HEErAhvXFmI3iOA",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3807,
-      "title": "钢银电商披露交易履约财务运营四大智能体；云汉芯城推进全链路AI配单；齐心智磐完成AI服务备案；泛鼎国际披露海外新业绩丨产业互联网周报",
+      "id": 3883,
+      "title": "Shopee：三季度GMV达397亿美元、VIP会员突破2100万",
       "source": "亿邦动力",
-      "publish_date": "2026-11-15",
-      "url": "https://mp.weixin.qq.com/s/QyrcK2nxeMp2CG1ikvpz-g",
+      "publish_date": "2026-11-18",
+      "url": "https://mp.weixin.qq.com/s/uJhC0ViI3RXp6GlvVoThzw",
       "summary": "",
       "keywords": [],
       "cover": ""
