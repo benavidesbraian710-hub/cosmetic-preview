@@ -1,60 +1,60 @@
 {
   "stats": {
-    "total_articles": 3286,
+    "total_articles": 3316,
     "source_count": 18,
     "date_range": {
       "start": "2026-06-15",
-      "end": "2026-11-19"
+      "end": "2026-11-20"
     },
-    "last_update": "2026-11-19T12:06:48.825351"
+    "last_update": "2026-11-20T13:09:59.816871"
   },
   "latest": [
     {
-      "id": 3898,
-      "title": "两市成交额创年内新低，释放什么信号？",
+      "id": 3927,
+      "title": "快递业竞争逻辑之变：中通如何重塑网络价值？",
       "source": "财经早餐",
-      "publish_date": "2026-11-19",
-      "url": "https://mp.weixin.qq.com/s/9BFnqCYqrqbEDhcSUXYUPg",
+      "publish_date": "2026-11-20",
+      "url": "https://mp.weixin.qq.com/s/Y89S3-4-eEksBuc0U-wy5w",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3899,
-      "title": "【财经早餐】2026.11.19星期四",
+      "id": 3928,
+      "title": "【财经早餐】2026.11.20星期五",
       "source": "财经早餐",
-      "publish_date": "2026-11-19",
-      "url": "https://mp.weixin.qq.com/s/uzgRd3nQFk6zc-f8Sj-K8Q",
+      "publish_date": "2026-11-20",
+      "url": "https://mp.weixin.qq.com/s/XTRG9BYGVR7mlHJzm0o_sg",
       "summary": "",
       "keywords": [],
       "cover": ""
     },
     {
-      "id": 3897,
-      "title": "长寿小鼠的肝脏，悄悄换了一种“燃料”",
+      "id": 3929,
+      "title": "铜铝一降温，家电股就成行情“黑马”？",
+      "source": "财经早餐",
+      "publish_date": "2026-11-20",
+      "url": "https://mp.weixin.qq.com/s/qJPKFgu5xu7iD5Ky4PZWrQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3926,
+      "title": "抗衰到底有没有效？先看你用的“尺子”准不准",
       "source": "肤见未来实验室",
+      "publish_date": "2026-11-20",
+      "url": "https://mp.weixin.qq.com/s/3OFefQjDxM89zFYJvYddXQ",
+      "summary": "",
+      "keywords": [],
+      "cover": ""
+    },
+    {
+      "id": 3910,
+      "title": "欢聚集团Q3总营收6.246亿美元，SHOPLINE收入同比增长24.7%",
+      "source": "亿邦动力",
       "publish_date": "2026-11-19",
-      "url": "https://mp.weixin.qq.com/s/9_uam09K3nj2qzsPUimXdw",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3882,
-      "title": "抖音双11终极榜单：美容个护霸主地位动摇 男女装仍有机会",
-      "source": "亿邦动力",
-      "publish_date": "2026-11-18",
-      "url": "https://mp.weixin.qq.com/s/WlwD3v6HEErAhvXFmI3iOA",
-      "summary": "",
-      "keywords": [],
-      "cover": ""
-    },
-    {
-      "id": 3883,
-      "title": "Shopee：三季度GMV达397亿美元、VIP会员突破2100万",
-      "source": "亿邦动力",
-      "publish_date": "2026-11-18",
-      "url": "https://mp.weixin.qq.com/s/uJhC0ViI3RXp6GlvVoThzw",
+      "url": "https://mp.weixin.qq.com/s/srZ8knkKhly7u6DbAkzyLw",
       "summary": "",
       "keywords": [],
       "cover": ""
